@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataDock AI - Login</title>
+    <script src="api-config.js"></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 3D Flow Wave Canvas */
+        #scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: 1;
+        }
+
+        #scroll-host {
+            height: 620vh;
+        }
+
+        /* Page Centered Flex Overlay */
+        .page-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            pointer-events: none;
+        }
+
+        /* Centered Glassmorphism Login Card */
+        .login-container {
+            pointer-events: auto;
+            position: relative;
+            width: clamp(280px, 80vw, 360px);
+            max-width: 360px;
+            min-width: 280px;
+            background: rgba(2, 22, 12, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(52, 232, 154, 0.15);
+            padding: 1.75rem 1.25rem;
+            text-align: center;
+            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            border-color: rgba(52, 232, 154, 0.5);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 45px rgba(52, 232, 154, 0.25);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Logo Section */
+        .logo {
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-copy {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Space Grotesk', 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0;
+        }
+
+        .logo-title {
+            color: #ffffff;
+        }
+
+        .logo-highlight {
+            color: #34e89a;
+        }
+
+        /* SVG Fallback Logo if image not present */
+        .logo-fallback-svg {
+            width: 72px;
+            height: 72px;
+            filter: drop-shadow(0 0 15px rgba(52, 232, 154, 0.6));
+        }
+
+        .login-container:hover .logo img,
+        .login-container:hover .logo-fallback-svg {
+            transform: scale(1.05);
+        }
+
+        /* Titles */
+        .login-container h1 {
+            font-family: 'Space Grotesk', 'Poppins', sans-serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, #ffffff 0%, #aef0c0 60%, #34e89a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-container p {
+            font-size: 0.82rem;
+            color: rgba(122, 255, 191, 0.75);
+            margin-bottom: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* Form Inputs */
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .input-box {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box i.fa-envelope,
+        .input-box i.fa-lock {
+            position: absolute;
+            left: 1.1rem;
+            color: rgba(122, 255, 191, 0.5);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: color 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 0.85rem 2.8rem 0.85rem 2.8rem;
+            background: rgba(10, 25, 18, 0.7);
+            border: 1px solid rgba(52, 232, 154, 0.2);
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(148, 163, 184, 0.45);
+        }
+
+        .input-box input:hover {
+            border-color: rgba(52, 232, 154, 0.4);
+            background: rgba(10, 25, 18, 0.85);
+        }
+
+        .input-box input:focus {
+            border-color: #34e89a;
+            background: rgba(5, 18, 12, 0.95);
+            box-shadow: 0 0 15px rgba(52, 232, 154, 0.35), inset 0 0 8px rgba(52, 232, 154, 0.1);
+        }
+
+        .input-box input:focus ~ i,
+        .input-box:focus-within i.fa-envelope,
+        .input-box:focus-within i.fa-lock {
+            color: #34e89a;
+            transform: scale(1.1);
+        }
+
+        /* Password Toggle Button */
+        #togglePassword {
+            position: absolute;
+            right: 0.85rem;
+            color: rgba(122, 255, 191, 0.5);
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: color 0.2s ease;
+            z-index: 2;
+        }
+
+        #togglePassword:hover {
+            color: #34e89a;
+        }
+
+        /* Options Row */
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: rgba(148, 163, 184, 0.8);
+            margin-top: 0.1rem;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .options input[type="checkbox"] {
+            accent-color: #34e89a;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .options a {
+            color: #34e89a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        .options a:hover {
+            color: #7affbf;
+            text-shadow: 0 0 8px rgba(52, 232, 154, 0.6);
+        }
+
+        /* Submit Button */
+        .login-btn {
+            position: relative;
+            width: 100%;
+            padding: 0.9rem;
+            margin-top: 0.4rem;
+            background: linear-gradient(135deg, #34e89a 0%, #0aff7f 100%);
+            border: none;
+            border-radius: 12px;
+            color: #02160c;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: inherit;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(52, 232, 154, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(52, 232, 154, 0.7);
+            background: linear-gradient(135deg, #7affbf 0%, #34e89a 100%);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .google-btn {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            min-height: 40px;
+            margin: 0 auto 0.5rem;
+        }
+
+        #googleSignInStatus {
+            margin: 0.25rem 0 0.5rem;
+            color: rgba(148, 163, 184, 0.9);
+            font-size: 0.75rem;
+        }
+
+        /* Register Section */
+        .register {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.8);
+        }
+
+        .register a {
+            color: #34e89a;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.3rem;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        .register a:hover {
+            color: #7affbf;
+            text-shadow: 0 0 10px rgba(52, 232, 154, 0.6);
+        }
+
+        /* Toast Alert Container */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            min-width: 280px;
+            padding: 0.9rem 1.2rem;
+            background: rgba(2, 22, 12, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid #34e89a;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(52, 232, 154, 0.3);
+            animation: slideInToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInToast {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+            .login-container h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.143.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.143.0/examples/jsm/"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- 3D Flow Wave Canvas Background -->
+    <canvas id="scene"></canvas>
+
+    <!-- Scroll Host -->
+    <div id="scroll-host"></div>
+
+    <!-- Centered Login Overlay -->
+    <div class="page-overlay">
+        <div class="login-container">
+
+            <!-- Logo (with SVG Fallback if image not found) -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="8" width="48" height="12" rx="6" fill="#00F998" opacity="0.9"/>
+                        <rect x="8" y="26" width="48" height="12" rx="6" fill="#0AFF7F" opacity="0.75"/>
+                        <rect x="8" y="44" width="48" height="12" rx="6" fill="#34E89A" opacity="0.55"/>
+                        <rect x="4" y="4" width="56" height="56" rx="16" stroke="rgba(52,232,154,0.35)" stroke-width="2"/>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <g filter="url(#glow)">
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-copy">
+                    <span class="logo-title">DataDock</span>
+                    <span class="logo-highlight">AI</span>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <h1>DataDock AI</h1>
+            <p>Monitor, Compare, and Understand Your Data</p>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+
+                <!-- Email -->
+                <div class="input-box">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Email Address"
+                        required>
+                </div>
+
+                <!-- Password -->
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        required>
+
+                    <span id="togglePassword">
+                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                    </span>
+                </div>
+
+                <!-- Options -->
+                <div class="options">
+                    <label>
+                        <input type="checkbox">
+                        Remember Me
+                    </label>
+
+                    <a href="#">Forgot Password?</a>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="login-btn" id="loginBtn">
+                    Login
+                </button>
+            </form>
+
+            <!-- OR Divider-->
+             <div class="or-divider">
+                <span></span>
+                <p>OR</p>
+            </div>
+
+            <div class="google-btn" id="googleBtn"></div>
+            <p id="googleSignInStatus" hidden></p>
+
+            <!-- Register -->
+            <div class="register">
+                Don't have an account?
+                <a href="register.html">Register</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Three.js 3D Flow Wave & Form Interactivity Script -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+        import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js';
+        import { CopyShader } from 'three/addons/shaders/CopyShader.js';
+
+        const API_URL = window.DATADOCK_API_URL;
+
+        // Fixed parameters
+        const bgColor       = '#02160c';   // FinalPass background tint
+        const flameColor    = '#0aff7f';   // corner-flame A
+        const flameColor2   = '#aef0c0';   // corner-flame B
+        const flameAmt      = 0.2;         // corner-flame intensity
+        const atmoColor     = '#7affbf';   // ambient motes color
+        const atmoCount     = 300;         // mote count
+        const atmoSize      = 24;          // mote base size
+        const atmoSpeed     = 1.0;         // mote warp speed
+        const colorLow      = '#02160c';   // points low color
+        const colorHigh     = '#34e89a';   // points high color
+        const opacity       = 0.26;        // point opacity
+        const pointSize     = 5.5;         // point base size
+        const brightness    = 0.45;        // point color multiplier
+        const waveHeight    = 3;           // base swell amplitude
+        const flow          = 1;           // noise scroll speed
+        const tilt          = 0;           // sheet X rotation (negated)
+        const scale         = 0.275;       // shrinks the sheet to frame
+        const scrollRise    = 1.0;         // swell amplitude growth on scroll
+        const camStartY     = 7,  camStartZ = 16;   // scroll 0 camera
+        const camEndY       = 0.8, camEndZ  = -2;   // scroll 1 camera
+        const lookStartZ    = 2,  lookEndZ  = -16;  // look-target pan
+        const parallax      = 1.2;
+        const pointerRadius   = 7.0;
+        const pointerStrength = 0.9;
+
+        // Helpers
+        const Lerp = (a, b, t) => a + (b - a) * t;
+        const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+        function hexToVec3(hex) {
+          const n = parseInt(hex.slice(1), 16);
+          return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
+        }
+
+        // Layers
+        const LAYERS = { NONE:0, TORUS_SCENE:1, BLOOM_SCENE:2, ENTIRE_SCENE:3 };
+
+        // Renderer setup
+        const canvas = document.getElementById('scene');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.VSMShadowMap;
+
+        // Scene & Camera setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        scene.fog = new THREE.Fog(0x000000, 0, 15);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 400);
+        camera.position.set(0, camStartY, camStartZ);
+        camera.layers.enable(LAYERS.TORUS_SCENE);
+        camera.layers.enable(LAYERS.BLOOM_SCENE);
+        camera.layers.enable(LAYERS.ENTIRE_SCENE);
+        scene.add(camera);
+
+        // Shared RenderPass
+        const renderPass = new RenderPass(scene, camera);
+
+        // torusComposer
+        const torusComposer = new EffectComposer(renderer);
+        torusComposer.renderToScreen = false;
+        torusComposer.addPass(renderPass);
+        torusComposer.addPass(new ShaderPass(GammaCorrectionShader));
+        torusComposer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.22, 0.2, 0));
+        torusComposer.addPass(new ShaderPass(CopyShader));
+
+        // bloomComposer
+        const bloomComposer = new EffectComposer(renderer);
+        bloomComposer.renderToScreen = false;
+        bloomComposer.addPass(renderPass);
+        bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.4, 0.55, 0));
+        bloomComposer.addPass(new ShaderPass(GammaCorrectionShader));
+
+        // FinalPass Shader Definition
+        const FinalShader = {
+          uniforms: {
+            iTime: { value: 0 },
+            tDiffuse: { value: null },
+            torusTexture: { value: null },
+            bloomTexture: { value: null },
+            haloTexture: { value: null },
+            uBg: { value: hexToVec3(bgColor) },
+            uFlameA: { value: hexToVec3(flameColor) },
+            uFlameB: { value: hexToVec3(flameColor2) },
+            uFlameAmt: { value: flameAmt }
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }
+          `,
+          fragmentShader: `
+            uniform float iTime; uniform sampler2D tDiffuse; uniform sampler2D bloomTexture; uniform sampler2D torusTexture; uniform sampler2D haloTexture;
+            uniform vec3 uBg; uniform vec3 uFlameA; uniform vec3 uFlameB; uniform float uFlameAmt;
+            varying vec2 vUv;
+            vec3 warp3d(vec3 pos, float t){ float curv=.8,a=1.9,b=0.7; pos*=2.;
+              pos.x+=curv*sin(t+a*pos.y)+t*b; pos.y+=curv*cos(t+a*pos.x);
+              pos.y+=curv*sin(t+a*pos.z)+t*b; pos.z+=curv*cos(t+a*pos.y);
+              pos.z+=curv*sin(t+a*pos.x)+t*b; pos.x+=curv*cos(t+a*pos.z);
+              return 0.5+0.5*cos(pos.xyz+vec3(1,2,4)); }
+            void main(){
+              vec2 uv = 2.*vUv - 1.;
+              vec3 w = pow(warp3d(vec3(uv.x, sin(uv.y), uv.y), iTime*1.5), vec3(1.5));
+              vec3 flame = 1.5*uFlameA*w.x; flame*=w.y; flame += uFlameB*w.z;
+              flame *= smoothstep(0.25, 1., abs(uv.y));
+              float md = smoothstep(-0.7, 1., -uv.y*uv.x); flame *= md*md;
+              vec3 bg = uBg * (1.0 - 0.4 * length(uv));
+              vec3 halo = texture2D(haloTexture, vUv).xyz;
+              gl_FragColor = vec4(bg + flame*uFlameAmt + texture2D(bloomTexture, vUv).xyz + texture2D(torusTexture, vUv).xyz + texture2D(tDiffuse, vUv).xyz + halo, 1.);
+            }
+          `
+        };
+
+        // finalComposer
+        const finalPass = new ShaderPass(FinalShader);
+        const finalComposer = new EffectComposer(renderer);
+        finalComposer.addPass(renderPass);
+        finalComposer.addPass(finalPass);
+
+        // Simplex Noise GLSL string
+        const SNOISE = `
+          vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+          vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+          float snoise(vec3 v){
+            const vec2 C = vec2(1.0/6.0, 1.0/3.0); const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+            vec3 i = floor(v + dot(v, C.yyy)); vec3 x0 = v - i + dot(i, C.xxx);
+            vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g;
+            vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
+            vec3 x1 = x0 - i1 + 1.0 * C.xxx; vec3 x2 = x0 - i2 + 2.0 * C.xxx; vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+            i = mod(i, 289.0);
+            vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+            float n_ = 1.0/7.0; vec3 ns = n_ * D.wyz - D.xzx;
+            vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+            vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_);
+            vec4 x = x_ *ns.x + ns.yyyy; vec4 y = y_ *ns.x + ns.yyyy; vec4 h = 1.0 - abs(x) - abs(y);
+            vec4 b0 = vec4(x.xy, y.xy); vec4 b1 = vec4(x.zw, y.zw);
+            vec4 s0 = floor(b0)*2.0 + 1.0; vec4 s1 = floor(b1)*2.0 + 1.0; vec4 sh = -step(h, vec4(0.0));
+            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy; vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+            vec3 p0 = vec3(a0.xy,h.x); vec3 p1 = vec3(a0.zw,h.y); vec3 p2 = vec3(a1.xy,h.z); vec3 p3 = vec3(a1.zw,h.w);
+            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+            p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+            vec4 m = max(0.5 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0); m = m * m;
+            return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+          }
+        `;
+
+        // Points Geometry & Material
+        const pointsGeo = new THREE.SphereGeometry(4.2, 200, 600);
+        const pointsMat = new THREE.ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          uniforms: {
+            uTime: { value: 0 },
+            uStream: { value: 0 },
+            uAppear: { value: 0 },
+            uColLow: { value: hexToVec3(colorLow) },
+            uColHigh: { value: hexToVec3(colorHigh) },
+            uOpacity: { value: opacity },
+            uSize: { value: pointSize },
+            uBrightness: { value: brightness },
+            uWaveHeight: { value: waveHeight },
+            uFlow: { value: flow },
+            uScale: { value: scale },
+            uCursor: { value: new THREE.Vector3() },
+            uRepelRadius: { value: pointerRadius },
+            uRepelStrength: { value: pointerStrength },
+            uActivity: { value: 0 }
+          },
+          vertexShader: `
+            uniform float uTime; uniform float uStream; uniform float uSize; uniform float uWaveHeight; uniform float uFlow; uniform float uScale;
+            uniform vec3 uColLow; uniform vec3 uColHigh;
+            uniform vec3 uCursor; uniform float uRepelRadius; uniform float uRepelStrength; uniform float uActivity;
+            varying float vFade; varying vec3 vColor;
+            ${SNOISE}
+            void main() {
+              vec3 wp = vec3(position.x * 13.0, 0.0, position.z * 25.0);
+              wp.x += position.y * 6.0;
+              // uStream slides the sampled hills toward the camera (forward flight).
+              float zc = wp.z + uStream;
+              float wn = snoise(vec3(wp.x * 0.08, zc * 0.08, uTime * 0.15 * uFlow)) * 2.0;
+              wn += snoise(vec3(wp.x * 0.16, zc * 0.16, uTime * 0.3 * uFlow)) * 0.8;
+              wp.y += wn * uWaveHeight;
+
+              vec3 finalPos = wp * uScale;
+              vec4 modelPosition = modelMatrix * vec4(finalPos, 1.0);
+              vec3 toP = modelPosition.xyz - uCursor;
+              float cd = length(toP);
+              float fall = smoothstep(uRepelRadius, 0.0, cd);
+              modelPosition.xyz += normalize(toP + vec3(0.0001)) * fall * uRepelStrength * uActivity;
+              vec4 mvPosition = viewMatrix * modelPosition;
+
+              float colMix = smoothstep(-3.0, 3.0, position.y + position.x * 0.5);
+              vColor = mix(uColLow, uColHigh, clamp(colMix, 0.0, 1.0));
+              vFade = 1.0;
+
+              gl_PointSize = uSize * (10.0 / -mvPosition.z);
+              gl_PointSize = max(gl_PointSize, 1.5);
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
+          fragmentShader: `
+            uniform float uOpacity; uniform float uBrightness; uniform float uAppear;
+            varying float vFade; varying vec3 vColor;
+            void main() {
+              vec2 xy = gl_PointCoord - 0.5;
+              float ll = length(xy);
+              if (ll > 0.5) discard;
+              float a = smoothstep(0.5, 0.1, ll);
+              gl_FragColor = vec4(vColor * uBrightness, vFade * a * uOpacity * uAppear);
+            }
+          `
+        });
+
+        const wavePoints = new THREE.Points(pointsGeo, pointsMat);
+        wavePoints.frustumCulled = false;
+        wavePoints.layers.enable(LAYERS.TORUS_SCENE);
+        wavePoints.layers.enable(LAYERS.BLOOM_SCENE);
+        wavePoints.layers.enable(LAYERS.ENTIRE_SCENE);
+
+        const group = new THREE.Group();
+        group.add(wavePoints);
+        scene.add(group);
+
+        // Ambient Motes
+        const N = Math.round(atmoCount);
+        const positions = new Float32Array(N * 3);
+        const sizes = new Float32Array(N);
+        const seeds = new Float32Array(N);
+
+        for (let i = 0; i < N; i++) {
+          positions[i * 3]     = 2 * Math.random() - 1;
+          positions[i * 3 + 1] = 2 * Math.random() - 1;
+          positions[i * 3 + 2] = 2 * Math.random() - 1;
+          sizes[i] = atmoSize * (0.4 + Math.random());
+          seeds[i] = Math.random();
+        }
+
+        const atmoGeo = new THREE.BufferGeometry();
+        atmoGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        atmoGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        atmoGeo.setAttribute('seed', new THREE.BufferAttribute(seeds, 1));
+
+        const atmoMat = new THREE.ShaderMaterial({
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          depthTest: false,
+          uniforms: {
+            uTime: { value: 0 },
+            uColor: { value: hexToVec3(atmoColor) },
+            uRes: { value: new THREE.Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio) }
+          },
+          vertexShader: `
+            attribute float size; attribute float seed; uniform float uTime; uniform vec2 uRes;
+            varying float vA;
+            vec3 warp(vec3 p, float t){ float c=0.9,a=1.9,b=0.02,s=0.05; p*=2.;
+              p.x+=c*sin(s*t+a*p.y)+t*b; p.y+=c*cos(s*t+a*p.x); p.y+=c*sin(s*t+a*p.z)+t*b;
+              p.z+=c*cos(s*t+a*p.y); p.z+=c*sin(s*t+a*p.x)+t*b; p.x+=c*cos(s*t+a*p.z);
+              return cos(p+vec3(1,2,4)); }
+            void main(){
+              vec3 v = position*4.0 + warp(position, uTime)*1.2;
+              vec4 mv = modelViewMatrix * vec4(v, 1.0);
+              float r = length(v); float farF = 1.0 - smoothstep(5.0, 6.5, r); float nearF = smoothstep(0.0, 0.5, -mv.z);
+              vA = farF * nearF;
+              gl_PointSize = size * uRes.y / 900.0 / -mv.z; gl_PointSize = max(gl_PointSize, 1.0);
+              gl_Position = projectionMatrix * mv;
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 uColor; varying float vA;
+            void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) discard;
+              float tex = smoothstep(0.5, 0.0, l); gl_FragColor = vec4(uColor * tex, tex * vA * 0.6); }
+          `
+        });
+
+        const atmoPts = new THREE.Points(atmoGeo, atmoMat);
+        atmoPts.frustumCulled = false;
+        atmoPts.layers.enable(LAYERS.TORUS_SCENE);
+        atmoPts.layers.enable(LAYERS.BLOOM_SCENE);
+        atmoPts.layers.enable(LAYERS.ENTIRE_SCENE);
+        scene.add(atmoPts);
+
+        atmoPts.onBeforeRender = () => {
+          const t = performance.now() / 1000;
+          atmoMat.uniforms.uTime.value = t * atmoSpeed * 8.0;
+          atmoPts.position.copy(camera.position);
+          finalPass.uniforms.iTime.value = t;
+        };
+
+        // Scroll & Pointer tracking
+        let scrollTarget = 0, scrollSmooth = 0, scrollCurrent = 0;
+
+        window.addEventListener('scroll', () => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          scrollTarget = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+        }, { passive: true });
+
+        const mouseTarget = { x: 0, y: 0 };
+        const mouse = { x: 0, y: 0 };
+        const POINTER = { world: new THREE.Vector3(), activity: 0, active: false, lastMove: performance.now() };
+
+        window.addEventListener('mousemove', (e) => {
+          mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+          mouseTarget.y = -((e.clientY / window.innerHeight) * 2 - 1);
+          POINTER.active = true;
+          POINTER.lastMove = performance.now();
+        }, { passive: true });
+
+        window.addEventListener('mouseout', () => {
+          POINTER.active = false;
+        });
+
+        const _ndc = new THREE.Vector3(), _dir = new THREE.Vector3(), _tgt = new THREE.Vector3();
+        function updatePointerWorld() {
+          _tgt.set(0, 0, 0);
+          if (POINTER.active) {
+            _ndc.set(mouse.x, mouse.y, 0.5).unproject(camera);
+            _dir.copy(_ndc).sub(camera.position).normalize();
+            const dn = _dir.z;
+            if (Math.abs(dn) > 1e-4) {
+              const tt = -camera.position.z / dn;
+              if (tt > 0 && Number.isFinite(tt)) _tgt.copy(camera.position).addScaledVector(_dir, tt);
+            }
+          }
+          POINTER.world.lerp(_tgt, 0.12);
+          const idle = (performance.now() - POINTER.lastMove) / 1000;
+          POINTER.activity += (((POINTER.active && idle < 3) ? 1 : 0) - POINTER.activity) * 0.06;
+        }
+
+        // Per-frame scene update
+        class FlowScene {
+          constructor() {
+            this.stream = 0;
+            this.appearStart = performance.now();
+            this.t0 = performance.now() / 1000;
+          }
+
+          render(scroll, m) {
+            const t = performance.now() / 1000;
+            const dt = Math.min(0.05, t - this.t0);
+            this.t0 = t;
+            pointsMat.uniforms.uTime.value = t;
+
+            // Stream the hills toward us at a constant rate; grow the swell with scroll.
+            this.stream += dt * (flow * 2.0) * 4.0;
+            pointsMat.uniforms.uStream.value = this.stream;
+            pointsMat.uniforms.uWaveHeight.value = waveHeight * (1 + scroll * scrollRise);
+
+            // Camera fly-path: smoothstep over the first 35% of scroll.
+            const ea = Math.min(scroll / 0.35, 1.0);
+            const e = ea * ea * (3 - 2 * ea);
+            const camY = Lerp(camStartY, camEndY, e);
+            const camZ = Lerp(camStartZ, camEndZ, e);
+            camera.position.set(m.x * parallax, camY + m.y * parallax * 0.3, camZ);
+            camera.lookAt(m.x * parallax * 0.5, Lerp(0.0, 0.6, e), Lerp(lookStartZ, lookEndZ, e));
+            group.rotation.x = -tilt;
+            group.rotation.y = 0;
+            updatePointerWorld();
+
+            pointsMat.uniforms.uCursor.value.copy(POINTER.world);
+            pointsMat.uniforms.uActivity.value = POINTER.activity;
+            const elapsed = (performance.now() - this.appearStart) / 1000;
+            pointsMat.uniforms.uAppear.value = Math.max(0, Math.min(1, (elapsed - 0.2) / 1.4));
+          }
+        }
+
+        const sceneObj = new FlowScene();
+
+        // Render loop
+        function animate() {
+          requestAnimationFrame(animate);
+
+          scrollSmooth  = Lerp(scrollSmooth, scrollTarget, 0.10);
+          scrollCurrent = Lerp(scrollCurrent, scrollSmooth, 0.06);
+          mouse.x = Lerp(mouse.x, mouseTarget.x, 0.06);
+          mouse.y = Lerp(mouse.y, mouseTarget.y, 0.06);
+
+          sceneObj.render(scrollCurrent, mouse);
+
+          camera.layers.set(LAYERS.TORUS_SCENE);
+          torusComposer.render();
+
+          camera.layers.set(LAYERS.BLOOM_SCENE);
+          bloomComposer.render();
+
+          finalPass.uniforms.bloomTexture.value = bloomComposer.readBuffer.texture;
+          finalPass.uniforms.torusTexture.value = torusComposer.renderTarget1.texture || torusComposer.readBuffer.texture;
+
+          camera.layers.set(LAYERS.ENTIRE_SCENE);
+          finalComposer.render();
+        }
+
+        // Resize
+        function onResize() {
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const dpr = window.devicePixelRatio;
+
+          renderer.setPixelRatio(dpr);
+          renderer.setSize(w, h, false);
+
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+
+          torusComposer.setPixelRatio(dpr);
+          torusComposer.setSize(w, h);
+
+          bloomComposer.setPixelRatio(dpr);
+          bloomComposer.setSize(w, h);
+
+          finalComposer.setPixelRatio(dpr);
+          finalComposer.setSize(w, h);
+
+          atmoMat.uniforms.uRes.value.set(w * dpr, h * dpr);
+
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          scrollTarget = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+        }
+
+        window.addEventListener('resize', onResize);
+        onResize();
+
+        animate();
+
+        /* Password Show / Hide Toggle Handler */
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        if (togglePassword && passwordInput && eyeIcon) {
+            togglePassword.addEventListener('click', () => {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                
+                if (isPassword) {
+                    eyeIcon.className = 'fa-solid fa-eye-slash';
+                    eyeIcon.style.color = '#34e89a';
+                } else {
+                    eyeIcon.className = 'fa-solid fa-eye';
+                    eyeIcon.style.color = '';
+                }
+            });
+        }
+
+        /* Form Submission & Real Backend API Call */
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+
+        if (loginForm && loginBtn) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Authenticating...';
+                loginBtn.style.opacity = '0.8';
+
+                showToast('Connecting to DataDock AI Backend...', 'info');
+
+                try {
+                    const response = await fetch(`${API_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+
+                        if (data.access_token) {
+                            localStorage.setItem('access_token', data.access_token);
+                        }
+
+                        loginBtn.textContent = 'Access Granted!';
+                        loginBtn.style.background = 'linear-gradient(135deg, #34e89a 0%, #10B981 100%)';
+                        showToast(`Welcome back, ${data.user?.name || email}! Redirecting to Dashboard...`, 'success');
+
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showToast(data.detail || 'Login failed. Invalid credentials.', 'error');
+                    }
+                } catch (err) {
+                    console.error('Login Error:', err);
+                    showToast('Cannot connect to backend server. Make sure FastAPI is running on port 8000.', 'error');
+                } finally {
+                    setTimeout(() => {
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Login';
+                        loginBtn.style.opacity = '1';
+                        loginBtn.style.background = '';
+                    }, 3000);
+                }
+            });
+        }
+
+        /* Google Sign-In */
+        const googleBtn = document.getElementById('googleBtn');
+        if (googleBtn) {
+            const googleClientId = window.DATADOCK_GOOGLE_CLIENT_ID?.trim();
+            const googleStatus = document.getElementById('googleSignInStatus');
+
+            if (!googleClientId) {
+                googleStatus.textContent = 'Google sign-in needs an OAuth client ID in api-config.js.';
+                googleStatus.hidden = false;
+            } else {
+                try {
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = 'https://accounts.google.com/gsi/client';
+                        script.async = true;
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+
+                    window.google.accounts.id.initialize({
+                        client_id: googleClientId,
+                        callback: async (credentialResponse) => {
+                            showToast('Authenticating with Google...', 'info');
+
+                            try {
+                                const response = await fetch(`${API_URL}/auth/google`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ credential: credentialResponse.credential })
+                                });
+                                const data = await response.json();
+
+                                if (!response.ok) {
+                                    showToast(data.detail || 'Google authentication failed.', 'error');
+                                    return;
+                                }
+
+                                localStorage.setItem('isLoggedIn', 'true');
+                                localStorage.setItem('userEmail', data.user.email);
+                                localStorage.setItem('access_token', data.access_token);
+                                showToast('Google sign-in successful. Redirecting to Dashboard...', 'success');
+                                setTimeout(() => {
+                                    window.location.href = 'dashboard.html';
+                                }, 1000);
+                            } catch (err) {
+                                console.error('Google Auth Error:', err);
+                                showToast('Cannot connect to server for Google sign-in.', 'error');
+                            }
+                        }
+                    });
+                    window.google.accounts.id.renderButton(googleBtn, {
+                        type: 'standard',
+                        theme: 'outline',
+                        size: 'large',
+                        text: 'continue_with',
+                        shape: 'rect',
+                        width: Math.min(320, googleBtn.clientWidth)
+                    });
+                } catch (err) {
+                    console.error('Google Identity Services failed to load:', err);
+                    googleStatus.textContent = 'Could not load Google sign-in. Check your internet connection and refresh.';
+                    googleStatus.hidden = false;
+                }
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(50px) scale(0.9)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

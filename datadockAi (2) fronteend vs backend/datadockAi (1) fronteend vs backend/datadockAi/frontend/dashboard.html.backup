@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataDock AI - Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #02160c;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(52, 232, 154, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(10, 255, 127, 0.06) 0%, transparent 40%);
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2.5rem;
+            background: rgba(2, 22, 12, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(52, 232, 154, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid rgba(52, 232, 154, 0.4);
+            border-radius: 10px;
+            color: #34e89a;
+            font-size: 1.2rem;
+        }
+
+        .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .brand-text span {
+            color: #34e89a;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(10, 30, 20, 0.8);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            color: #7affbf;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            padding: 0.5rem 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ffffff;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header Title */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #aef0c0 60%, #34e89a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            color: rgba(148, 163, 184, 0.8);
+            font-size: 0.95rem;
+        }
+
+        /* Summary Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .stat-card {
+            background: rgba(5, 25, 16, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(52, 232, 154, 0.12);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #34e89a;
+            font-size: 1.4rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .stat-info p {
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.8);
+            margin-top: 0.2rem;
+        }
+
+        /* Upload Section */
+        .card {
+            background: rgba(5, 25, 16, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header h2 i {
+            color: #34e89a;
+        }
+
+        /* Dropzone */
+        .dropzone {
+            border: 2px dashed rgba(52, 232, 154, 0.4);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(2, 18, 10, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: #34e89a;
+            background: rgba(52, 232, 154, 0.08);
+            box-shadow: 0 0 25px rgba(52, 232, 154, 0.15);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            color: #34e89a;
+            margin-bottom: 1rem;
+        }
+
+        .dropzone-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .dropzone-text p {
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.7);
+        }
+
+        .selected-file-badge {
+            margin-top: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid #34e89a;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #34e89a 0%, #0aff7f 100%);
+            color: #02160c;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(52, 232, 154, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(52, 232, 154, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert-msg {
+            margin-top: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .alert-msg.success {
+            display: block;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid #34e89a;
+            color: #34e89a;
+        }
+
+        .alert-msg.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #f87171;
+            color: #f87171;
+        }

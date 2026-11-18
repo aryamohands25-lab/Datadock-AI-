@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataDock AI - Create Account</title>
+    <script src="api-config.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000000;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 3D Flow Wave Canvas */
+        #scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: 1;
+        }
+
+        /* Centered Flex Overlay */
+        .page-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            pointer-events: none;
+            overflow-y: auto;
+        }
+
+        /* Centered Glassmorphism Card */
+        .login-container {
+            pointer-events: auto;
+            position: relative;
+            width: clamp(270px, 86vw, 340px);
+            max-width: 340px;
+            background: rgba(2, 22, 12, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(52, 232, 154, 0.35);
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(52, 232, 154, 0.18);
+            padding: 1.15rem 1rem;
+            text-align: center;
+            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            margin: auto;
+        }
+
+        .login-container:hover {
+            border-color: rgba(52, 232, 154, 0.6);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(52, 232, 154, 0.3);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Logo Header */
+        .logo {
+            margin-bottom: 0.4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 0.4rem;
+        }
+
+        .logo-copy {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo-title {
+            color: #ffffff;
+        }
+
+        .logo-highlight {
+            color: #34e89a;
+        }
+
+        /* Titles */
+        .login-container h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #aef0c0 60%, #34e89a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-container p.subtitle {
+            font-size: 0.83rem;
+            color: rgba(122, 255, 191, 0.75);
+            margin-bottom: 0.7rem;
+            font-weight: 400;
+        }
+
+        /* Form Inputs */
+        #registerForm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.52rem;
+        }
+
+        .input-box {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box i.input-icon {
+            position: absolute;
+            left: 1.1rem;
+            color: rgba(122, 255, 191, 0.55);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: color 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 0.6rem 2.4rem 0.6rem 2.4rem;
+            background: rgba(10, 25, 18, 0.75);
+            border: 1px solid rgba(52, 232, 154, 0.22);
+            border-radius: 12px;
+            font-size: 0.84rem;
+            font-family: inherit;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .input-box input:hover {
+            border-color: rgba(52, 232, 154, 0.45);
+            background: rgba(10, 25, 18, 0.9);
+        }
+
+        .input-box input:focus {
+            border-color: #34e89a;
+            background: rgba(5, 18, 12, 0.95);
+            box-shadow: 0 0 15px rgba(52, 232, 154, 0.35), inset 0 0 8px rgba(52, 232, 154, 0.1);
+        }
+
+        .input-box:focus-within i.input-icon {
+            color: #34e89a;
+            transform: scale(1.1);
+        }
+
+        /* Toggle Eye */
+        .toggle-pwd {
+            position: absolute;
+            right: 0.85rem;
+            color: rgba(122, 255, 191, 0.5);
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+            z-index: 2;
+        }
+
+        .toggle-pwd:hover {
+            color: #34e89a;
+        }
+
+        /* Submit Button */
+        .login-btn {
+            position: relative;
+            width: 100%;
+            padding: 0.65rem;
+            margin-top: 0.3rem;
+            background: linear-gradient(135deg, #34e89a 0%, #0aff7f 100%);
+            border: none;
+            border-radius: 12px;
+            color: #02160c;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: inherit;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(52, 232, 154, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(52, 232, 154, 0.7);
+            background: linear-gradient(135deg, #7affbf 0%, #34e89a 100%);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* OR Divider */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0.65rem 0 0.55rem;
+        }
+
+        .or-divider span {
+            flex: 1;
+            height: 1px;
+            background: rgba(52, 232, 154, 0.3);
+        }
+
+        .or-divider p {
+            margin: 0;
+            color: rgba(148, 163, 184, 0.7);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Google SSO Button */
+        .google-btn {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            background: #ffffff;
+            color: #111827;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .google-btn:hover {
+            transform: translateY(-2px);
+            background: #f8fafc;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .google-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Links */
+        .register-link {
+            margin-top: 0.75rem;
+            font-size: 0.78rem;
+            color: rgba(148, 163, 184, 0.8);
+        }
+
+        .register-link a {
+            color: #34e89a;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.3rem;
+            transition: color 0.2s ease;
+        }
+
+        .register-link a:hover {
+            color: #7affbf;
+            text-shadow: 0 0 10px rgba(52, 232, 154, 0.6);
+        }
+
+        /* Status Message */
+        #registerMessage {
+            margin-top: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Toast Alert Container */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            min-width: 280px;
+            padding: 0.9rem 1.2rem;
+            background: rgba(2, 22, 12, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid #34e89a;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(52, 232, 154, 0.3);
+            animation: slideInToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInToast {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+    </style>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.143.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.143.0/examples/jsm/"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- 3D Flow Wave Background Canvas -->
+    <canvas id="scene"></canvas>
+
+    <!-- Overlay Container -->
+    <div class="page-overlay">
+        <div class="login-container">
+
+            <!-- Logo Header -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="8" width="48" height="12" rx="6" fill="#00F998" opacity="0.9"/>
+                        <rect x="8" y="26" width="48" height="12" rx="6" fill="#0AFF7F" opacity="0.75"/>
+                        <rect x="8" y="44" width="48" height="12" rx="6" fill="#34E89A" opacity="0.55"/>
+                        <rect x="4" y="4" width="56" height="56" rx="16" stroke="rgba(52,232,154,0.35)" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="logo-copy">
+                    <span class="logo-title">DataDock</span>
+                    <span class="logo-highlight">AI</span>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1>Create Account</h1>
+            <p class="subtitle">Join DataDock AI for automated data quality monitoring</p>
+
+            <!-- Form -->
+            <form id="registerForm">
+
+                <!-- Name Input -->
+                <div class="input-box">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Full Name"
+                        required>
+                </div>
+
+                <!-- Email Input -->
+                <div class="input-box">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email Address"
+                        required>
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-box">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create Password"
+                        required>
+                    <span class="toggle-pwd" id="togglePassword">
+                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                    </span>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div class="input-box">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        required>
+                    <span class="toggle-pwd" id="toggleConfirmPassword">
+                        <i class="fa-solid fa-eye" id="eyeConfirmIcon"></i>
+                    </span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="login-btn" id="registerButton">
+                    Create Account
+                </button>
+
+                <!-- Feedback Message -->
+                <p id="registerMessage"></p>
+            </form>
+
+            <!-- OR Divider -->
+            <div class="or-divider">
+                <span></span>
+                <p>OR</p>
+                <span></span>
+            </div>
+
+            <!-- Google SSO Button -->
+            <button type="button" class="google-btn" id="googleBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#4285F4" d="M21.35 11.1h-9.3v2.8h5.35c-.22 1.16-.9 2.16-1.92 2.83v2.35h3.1c1.83-1.69 2.87-4.17 2.87-7.33 0-.62-.06-1.22-.2-1.8z"/>
+                    <path fill="#34A853" d="M12.05 22c2.43 0 4.47-.8 5.96-2.17l-3.1-2.35c-.86.58-1.96.92-2.86.92-2.2 0-4.07-1.48-4.74-3.48H4.04v2.18C5.5 19.92 8.55 22 12.05 22z"/>
+                    <path fill="#FBBC05" d="M7.31 14.92a5.584 5.584 0 0 1 0-3.78V9.0H4.04a8.963 8.963 0 0 0 0 6.0l3.27-2.08z"/>
+                    <path fill="#EA4335" d="M12.05 7.16c1.32 0 2.5.45 3.43 1.33l2.56-2.56C16.5 4.38 14.47 3.5 12.05 3.5 8.55 3.5 5.5 5.58 4.04 8.82l3.27 2.18c.67-2.0 2.54-3.48 4.74-3.48z"/>
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <!-- Navigation Link -->
+            <div class="register-link">
+                Already have an account?
+                <a href="index.html">Login</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Three.js 3D Background Script -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        const canvas = document.getElementById('scene');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 1);
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 0, 18);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 400);
+        camera.position.set(0, 7, 16);
+        camera.lookAt(0, 0, 2);
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        composer.addPass(new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            0.55,
+            0.65,
+            0.05
+        ));
+
+        const pointsGeo = new THREE.SphereGeometry(4.2, 200, 600);
+        const pointsMat = new THREE.ShaderMaterial({
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            uniforms: {
+                uTime: { value: 0 },
+                uStream: { value: 0 },
+                uMouse: { value: new THREE.Vector2() },
+                uAppear: { value: 0 }
+            },
+            vertexShader: `
+                uniform float uTime; uniform float uStream; uniform float uAppear;
+                uniform vec2 uMouse;
+                varying float vFade; varying vec3 vColor;
+                void main() {
+                    vec3 wp = vec3(position.x * 13.0, 0.0, position.z * 25.0);
+                    wp.x += position.y * 6.0;
+                    float zc = wp.z + uStream;
+                    float wave = sin(wp.x * 0.55 + uTime * 0.25) * cos(zc * 0.45 + uTime * 0.2);
+                    wave += sin(wp.x * 1.2 + zc * 0.35 + uTime * 0.45) * 0.35;
+                    wp.y += wave * 3.0;
+                    vec3 finalPos = wp * 0.275;
+                    finalPos.x += uMouse.x * 0.45;
+                    finalPos.y += uMouse.y * 0.2;
+                    vec4 mv = modelViewMatrix * vec4(finalPos, 1.0);
+                    float colMix = smoothstep(-3.0, 3.0, position.y + position.x * 0.5);
+                    vColor = mix(vec3(0.01, 0.08, 0.04), vec3(0.2, 0.91, 0.6), colMix);
+                    vFade = uAppear;
+                    gl_PointSize = max(5.5 * (10.0 / -mv.z), 1.5);
+                    gl_Position = projectionMatrix * mv;
+                }
+            `,
+            fragmentShader: `
+                uniform float uAppear;
+                varying float vFade; varying vec3 vColor;
+                void main() {
+                    vec2 xy = gl_PointCoord - 0.5;
+                    float glow = smoothstep(0.5, 0.1, length(xy));
+                    if (glow < 0.01) discard;
+                    gl_FragColor = vec4(vColor * 0.45, glow * vFade * 0.32);
+                }
+            `
+        });
+
+        const points = new THREE.Points(pointsGeo, pointsMat);
+        points.frustumCulled = false;
+        scene.add(points);
+        const startTime = performance.now();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = performance.now() / 1000;
+            pointsMat.uniforms.uTime.value = time;
+            pointsMat.uniforms.uStream.value += 0.08;
+            pointsMat.uniforms.uAppear.value = Math.min(1, (performance.now() - startTime) / 1400);
+            camera.position.x += (pointsMat.uniforms.uMouse.value.x * 1.2 - camera.position.x) * 0.03;
+            camera.lookAt(pointsMat.uniforms.uMouse.value.x * 0.5, pointsMat.uniforms.uMouse.value.y * 0.2, 2);
+            composer.render();
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        window.addEventListener('mousemove', (event) => {
+            pointsMat.uniforms.uMouse.value.x = (event.clientX / window.innerWidth) * 2 - 1;
+            pointsMat.uniforms.uMouse.value.y = (event.clientY / window.innerHeight) * 2 - 1;
+        }, { passive: true });
+
+        // Toggle Password Visibility
+        function setupToggle(toggleId, inputId, iconId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (toggle && input && icon) {
+                toggle.addEventListener('click', () => {
+                    const isPwd = input.type === 'password';
+                    input.type = isPwd ? 'text' : 'password';
+                    icon.className = isPwd ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+                    icon.style.color = isPwd ? '#34e89a' : '';
+                });
+            }
+        }
+        setupToggle('togglePassword', 'password', 'eyeIcon');
+        setupToggle('toggleConfirmPassword', 'confirmPassword', 'eyeConfirmIcon');
+    </script>
+
+    <!-- Register JS Handler -->
+    <script src="register.js"></script>
+</body>
+</html>

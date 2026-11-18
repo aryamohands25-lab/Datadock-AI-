@@ -1,0 +1,3833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataDock AI - Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #02160c;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(52, 232, 154, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(10, 255, 127, 0.06) 0%, transparent 40%);
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2.5rem;
+            background: rgba(2, 22, 12, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(52, 232, 154, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid rgba(52, 232, 154, 0.4);
+            border-radius: 10px;
+            color: #34e89a;
+            font-size: 1.2rem;
+        }
+
+        .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .brand-text span {
+            color: #34e89a;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(10, 30, 20, 0.8);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            color: #7affbf;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            padding: 0.5rem 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ffffff;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header Title */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #aef0c0 60%, #34e89a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            color: rgba(148, 163, 184, 0.8);
+            font-size: 0.95rem;
+        }
+
+        /* Summary Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .stat-card {
+            background: rgba(5, 25, 16, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(52, 232, 154, 0.12);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #34e89a;
+            font-size: 1.4rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .stat-info p {
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.8);
+            margin-top: 0.2rem;
+        }
+
+        /* Upload Section */
+        .card {
+            background: rgba(5, 25, 16, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header h2 i {
+            color: #34e89a;
+        }
+
+        /* Dropzone */
+        .dropzone {
+            border: 2px dashed rgba(52, 232, 154, 0.4);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(2, 18, 10, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: #34e89a;
+            background: rgba(52, 232, 154, 0.08);
+            box-shadow: 0 0 25px rgba(52, 232, 154, 0.15);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            color: #34e89a;
+            margin-bottom: 1rem;
+        }
+
+        .dropzone-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .dropzone-text p {
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.7);
+        }
+
+        .selected-file-badge {
+            margin-top: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid #34e89a;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #34e89a 0%, #0aff7f 100%);
+            color: #02160c;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(52, 232, 154, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(52, 232, 154, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert-msg {
+            margin-top: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .alert-msg.success {
+            display: block;
+            background: rgba(52, 232, 154, 0.15);
+            border: 1px solid #34e89a;
+            color: #34e89a;
+        }
+
+        .alert-msg.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #f87171;
+            color: #f87171;
+        }
+
+        /* History Table */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(52, 232, 154, 0.18);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: rgba(2, 18, 10, 0.9);
+            color: #34e89a;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid rgba(52, 232, 154, 0.12);
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(52, 232, 154, 0.05);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: rgba(52, 232, 154, 0.15);
+            color: #34e89a;
+            border: 1px solid rgba(52, 232, 154, 0.4);
+        }
+
+        .btn-action {
+            background: rgba(52, 232, 154, 0.12);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            color: #34e89a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: #34e89a;
+            color: #02160c;
+        }
+
+        .table-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #f87171;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(148, 163, 184, 0.7);
+        }
+
+        .empty-history i {
+            font-size: 2.5rem;
+            color: rgba(52, 232, 154, 0.3);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        /* Navigation Tabs */
+        .tabs-nav {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(52, 232, 154, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba(148, 163, 184, 0.8);
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn:hover {
+            color: #7affbf;
+        }
+
+        .tab-btn.active {
+            color: #34e89a;
+            border-bottom-color: #34e89a;
+        }
+
+        .tab-pane {
+            display: none;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        #tab-compare.active {
+            display: flex !important;
+        }
+
+        .compare-source-panel[hidden] {
+            display: none !important;
+        }
+
+        /* Dual Dropzone Comparison Grid */
+        .dual-dropzone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .dropzone-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #34e89a;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            background: rgba(2, 18, 10, 0.6);
+            padding: 0.3rem;
+            border-radius: 12px;
+            border: 1px solid rgba(52, 232, 154, 0.2);
+            width: fit-content;
+        }
+
+        .mode-toggle-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .mode-toggle-btn.active {
+            background: rgba(52, 232, 154, 0.2);
+            color: #34e89a;
+            font-weight: 600;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(2, 18, 10, 0.8);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.25s ease;
+        }
+
+        .select-input:focus {
+            border-color: #34e89a;
+            box-shadow: 0 0 15px rgba(52, 232, 154, 0.2);
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(2, 18, 10, 0.8);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.25s ease;
+            margin-top: 0.5rem;
+        }
+
+        .text-input:focus {
+            border-color: #34e89a;
+        }
+
+        /* Result Overview Banner */
+        .results-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .overview-card {
+            background: rgba(2, 18, 10, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            border-radius: 14px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .overview-title {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(148, 163, 184, 0.8);
+        }
+
+        .overview-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .badge-positive {
+            color: #34e89a;
+            background: rgba(52, 232, 154, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-negative {
+            color: #f87171;
+            background: rgba(239, 68, 68, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-warning {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .alert-banner {
+            padding: 1rem 1.4rem;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .alert-banner.info {
+            background: rgba(52, 232, 154, 0.12);
+            border: 1px solid rgba(52, 232, 154, 0.4);
+            color: #7affbf;
+        }
+
+        .alert-banner.warning {
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #fde047;
+        }
+
+        .subtabs-nav {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(52, 232, 154, 0.15);
+            padding-bottom: 0.5rem;
+        }
+
+        .subtab-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .subtab-btn:hover {
+            color: #ffffff;
+        }
+
+        .subtab-btn.active {
+            background: rgba(52, 232, 154, 0.18);
+            color: #34e89a;
+            font-weight: 600;
+        }
+
+        .subtab-content {
+            display: none;
+        }
+
+        .subtab-content.active {
+            display: block;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #24332d;
+            background-image: none;
+        }
+
+        .navbar {
+            background: rgba(255, 253, 248, 0.94);
+            border-bottom-color: rgba(17, 125, 85, 0.2);
+            box-shadow: 0 4px 18px rgba(58, 69, 57, 0.08);
+        }
+
+        .brand-logo,
+        .stat-icon,
+        .selected-file-badge,
+        .mode-toggle-btn.active,
+        .subtab-btn.active {
+            background: rgba(52, 232, 154, 0.14);
+        }
+
+        .brand-text,
+        .stat-info h3,
+        .card-header h2,
+        .dropzone-text h4,
+        .selected-file-badge,
+        .page-header h1 {
+            color: #24332d;
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.75);
+            color: #147a57;
+        }
+
+        .page-header h1 {
+            background: linear-gradient(135deg, #24332d 0%, #147a57 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .page-header p,
+        .stat-info p,
+        .dropzone-text p,
+        .empty-history,
+        .tab-btn,
+        .subtab-btn,
+        .mode-toggle-btn,
+        .card p {
+            color: #64736c;
+        }
+
+        .stat-card,
+        .card {
+            background: rgba(255, 253, 248, 0.88);
+            border-color: rgba(17, 125, 85, 0.22);
+            box-shadow: 0 12px 28px rgba(58, 69, 57, 0.1);
+        }
+
+        .dropzone,
+        .mode-toggle {
+            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(17, 125, 85, 0.35);
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            background: rgba(52, 232, 154, 0.1);
+        }
+
+        .table-responsive {
+            border-color: rgba(17, 125, 85, 0.2);
+        }
+
+        thead {
+            background: #e9f3ec;
+            color: #147a57;
+        }
+
+        th,
+        td {
+            border-bottom-color: rgba(17, 125, 85, 0.12);
+        }
+
+        tbody tr:hover {
+            background: rgba(52, 232, 154, 0.08);
+        }
+
+        .tab-btn.active,
+        .dropzone-label,
+        .subtab-btn.active,
+        .mode-toggle-btn.active {
+            color: #147a57;
+        }
+
+        .card[style],
+        .card [style*="background: linear-gradient"] {
+            background: #fffdf8 !important;
+            border-color: rgba(17, 125, 85, 0.24) !important;
+        }
+
+        .card [style*="color: #ffffff"],
+        .card [style*="color: #7affbf"] {
+            color: #365248 !important;
+        }
+
+        .card [style*="background: rgba(5, 25, 16"],
+        .card [style*="background: rgba(2, 18, 10"] {
+            background: #f1f7f2 !important;
+        }
+
+        .domain-selector {
+            background: rgba(255, 255, 255, 0.96) !important;
+            border: 1px solid rgba(17, 125, 85, 0.24) !important;
+            border-radius: 14px !important;
+            padding: 0.4rem 0.55rem !important;
+            box-shadow: 0 8px 18px rgba(58, 69, 57, 0.12), inset 0 1px 0 #ffffff;
+        }
+
+        .domain-label {
+            color: #147a57 !important;
+        }
+
+        .domain-option {
+            min-height: 38px;
+            border: 1px solid rgba(17, 125, 85, 0.18) !important;
+            background: #f4f8f4 !important;
+            color: #50625a !important;
+            box-shadow: 0 3px 0 rgba(17, 125, 85, 0.12), 0 6px 10px rgba(58, 69, 57, 0.08);
+            transform: translateY(0);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .domain-option:hover {
+            background: #ffffff !important;
+            color: #147a57 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 rgba(17, 125, 85, 0.14), 0 10px 14px rgba(58, 69, 57, 0.12);
+        }
+
+        .domain-option.active {
+            background: linear-gradient(145deg, #d9f8e7, #aee9c9) !important;
+            color: #0d734f !important;
+            border-color: #46bd86 !important;
+            box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.72), 0 4px 0 #23875d, 0 8px 14px rgba(17, 125, 85, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .domain-option:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 rgba(17, 125, 85, 0.18), 0 3px 6px rgba(58, 69, 57, 0.1);
+        }
+
+        .navbar {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .primary-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .primary-nav .tab-btn {
+            padding: 0.75rem 0.85rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .home-pane {
+            gap: 1.5rem;
+        }
+
+        .home-intro h1 {
+            margin-bottom: 0.45rem;
+            color: #24332d;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+        }
+
+        .home-intro p {
+            max-width: 780px;
+            color: #586a61;
+            line-height: 1.6;
+        }
+
+        .overview-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.5rem 1rem;
+        }
+
+        .overview-status {
+            color: #64736c;
+            font-size: 0.88rem;
+        }
+
+        .dataset-metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.85rem;
+            margin-top: 0.8rem;
+        }
+
+        .dataset-metric,
+        .version-card {
+            min-width: 0;
+            padding: 1.15rem;
+            background: #ffffff;
+            border: 1px solid #dce5df;
+            border-radius: 8px;
+        }
+
+        .dataset-metric strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: #24332d;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            overflow-wrap: anywhere;
+        }
+
+        .dataset-metric span,
+        .version-fact span {
+            color: #64736c;
+            font-size: 0.88rem;
+        }
+
+        .version-comparison {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0.85rem;
+            margin-top: 0.8rem;
+        }
+
+        .version-card header {
+            display: grid;
+            gap: 0.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e5ebe7;
+        }
+
+        .version-card header span {
+            color: #64736c;
+            font-size: 0.85rem;
+        }
+
+        .version-card header strong {
+            color: #24332d;
+            overflow-wrap: anywhere;
+        }
+
+        .version-facts {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+            padding-top: 0.8rem;
+        }
+
+        .version-fact {
+            display: grid;
+            gap: 0.2rem;
+        }
+
+        .version-fact strong {
+            color: #24332d;
+            font-size: 0.95rem;
+            overflow-wrap: anywhere;
+        }
+
+        .version-arrow {
+            color: #147a57;
+            font-size: 1.2rem;
+        }
+
+        .change-list {
+            margin-top: 0.8rem;
+            border-top: 1px solid #e3e9e5;
+        }
+
+        .change-row {
+            display: grid;
+            grid-template-columns: minmax(150px, 1fr) minmax(130px, 0.75fr) minmax(120px, auto);
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid #e3e9e5;
+        }
+
+        .change-name {
+            color: #24332d;
+            font-weight: 600;
+        }
+
+        .change-value {
+            color: #586a61;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .change-status {
+            justify-self: start;
+            padding: 0.28rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .change-status.regression {
+            color: #a12b2b;
+            background: #fde9e7;
+        }
+
+        .change-status.improvement {
+            color: #147047;
+            background: #e1f5e8;
+        }
+
+        .change-status.changed {
+            color: #825912;
+            background: #fff3d6;
+        }
+
+        .change-status.neutral {
+            color: #586a61;
+            background: #edf1ee;
+        }
+
+        .home-empty {
+            padding: 1rem 0;
+            color: #64736c;
+        }
+
+        .home-hero {
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 3.5rem clamp(1.5rem, 6vw, 5rem);
+            overflow: hidden;
+            position: relative;
+            color: #3d4039;
+            background-color: #c5ff72;
+            border: 1px solid #b8ed68;
+            border-radius: 10px;
+        }
+
+        .home-hero h1 {
+            max-width: 760px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.65rem;
+            line-height: 1.12;
+            color: #3d4039;
+        }
+
+        .home-hero p {
+            max-width: 610px;
+            margin-top: 1rem;
+            color: #45483f;
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        .home-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.6rem;
+        }
+
+        .home-action {
+            min-height: 46px;
+            padding: 0.75rem 1.2rem;
+            border: 1px solid #234c38;
+            border-radius: 6px;
+            color: #ffffff;
+            background: #234c38;
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .home-action.secondary {
+            color: #234c38;
+            background: transparent;
+            border-color: rgba(35, 76, 56, 0.65);
+        }
+
+        .home-section {
+            padding: 1.35rem 0;
+        }
+
+        .home-section h2 {
+            margin-bottom: 0.75rem;
+            color: #24332d;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+        }
+
+        .home-section>p {
+            max-width: 820px;
+            color: #586a61;
+            line-height: 1.7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.85rem;
+            margin-top: 1.2rem;
+        }
+
+        .feature-item {
+            min-height: 132px;
+            padding: 1.1rem;
+            background: rgba(255, 253, 248, 0.82);
+            border: 1px solid rgba(17, 125, 85, 0.18);
+            border-radius: 6px;
+        }
+
+        .feature-item i {
+            margin-bottom: 0.55rem;
+            color: #147a57;
+            font-size: 1.2rem;
+        }
+
+        .feature-item:nth-child(3n + 2) i {
+            color: #25729a;
+        }
+
+        .feature-item:nth-child(3n) i {
+            color: #b07820;
+        }
+
+        .feature-item h3 {
+            margin-bottom: 0.25rem;
+            color: #24332d;
+            font-size: 1rem;
+        }
+
+        .feature-item p {
+            color: #64736c;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin: 1.1rem 0 1.5rem;
+        }
+
+        .workflow-step {
+            padding: 0.9rem 1rem;
+            background: rgba(255, 253, 248, 0.82);
+            border-left: 3px solid #46bd86;
+            color: #365248;
+            font-weight: 600;
+        }
+
+        .compare-domain-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 253, 248, 0.85);
+            border: 1px solid rgba(17, 125, 85, 0.2);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                padding: 0.85rem 1rem;
+            }
+
+            .primary-nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                border-top: 1px solid rgba(17, 125, 85, 0.15);
+            }
+
+            .primary-nav .tab-btn {
+                flex: 1 0 auto;
+                justify-content: center;
+            }
+
+            .user-nav {
+                gap: 0.5rem;
+            }
+
+            .user-badge {
+                max-width: 42vw;
+                overflow: hidden;
+            }
+
+            .home-hero {
+                min-height: 320px;
+                padding: 2.4rem 1.4rem;
+            }
+
+            .home-hero h1 {
+                font-size: 2.1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .dataset-metric-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .version-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .version-arrow {
+                justify-self: center;
+                transform: rotate(90deg);
+            }
+
+            .workflow-steps {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-container {
+                margin: 1.2rem auto;
+                padding: 0 1rem;
+            }
+
+            .brand-logo {
+                width: 34px;
+                height: 34px;
+            }
+
+            .brand-text {
+                font-size: 1.15rem;
+            }
+
+            .btn-logout {
+                padding: 0.45rem 0.65rem;
+            }
+
+            .btn-logout i {
+                display: none;
+            }
+
+            .home-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .feature-grid,
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .change-row {
+                grid-template-columns: 1fr auto;
+            }
+
+            .change-value {
+                grid-column: 1;
+            }
+
+            .change-status {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+            }
+
+            .version-facts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        body {
+            background: #ffffff;
+            color: #17345c;
+        }
+
+        .navbar {
+            min-height: 52px;
+            height: 52px;
+            padding: 0 1.1rem;
+            background: #ffffff;
+            border-bottom: 1px solid #e3eaf2;
+            box-shadow: none;
+        }
+
+        .brand {
+            gap: 0.55rem;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: #ffffff;
+            background: #109c74;
+            border: 0;
+        }
+
+        .brand-text,
+        .brand-text span {
+            color: #122c53;
+            font-size: 1.12rem;
+        }
+
+        .user-nav {
+            gap: 0.65rem;
+        }
+
+        .btn-logout {
+            padding: 0.4rem 0.65rem;
+            color: #315174;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+
+        .btn-logout:hover {
+            color: #17345c;
+            background: #f1f5f9;
+        }
+
+        .app-shell {
+            display: grid;
+            grid-template-columns: 178px minmax(0, 1fr);
+            min-height: calc(100vh - 52px);
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 52px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: calc(100vh - 52px);
+            min-height: 440px;
+            padding: 1rem 0.75rem;
+            background: #ffffff;
+            border-right: 1px solid #e3eaf2;
+        }
+
+        .sidebar .primary-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.25rem;
+        }
+
+        .sidebar .tab-btn {
+            justify-content: flex-start;
+            min-height: 38px;
+            padding: 0.6rem 0.75rem;
+            color: #55708f;
+            border: 0;
+            border-radius: 6px;
+            font-size: 0.86rem;
+            font-weight: 500;
+        }
+
+        .sidebar .tab-btn:hover {
+            color: #137f66;
+            background: #f1f8f6;
+        }
+
+        .sidebar .tab-btn.active {
+            color: #108c6c;
+            background: #e8f6f3;
+            border: 0;
+        }
+
+        .sidebar-note {
+            margin-top: auto;
+            padding: 0.8rem;
+            color: #55708f;
+            background: linear-gradient(155deg, #f2f8ff, #e8f7f3);
+            border: 1px solid #e2edf3;
+            border-radius: 7px;
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+
+        .sidebar-note i {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #168e73;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: none;
+            min-width: 0;
+            margin: 0;
+            padding: 1.15rem 1.25rem 1rem;
+            gap: 1rem;
+        }
+
+        .home-pane.active {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .home-intro {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 1.15rem 1.25rem;
+            background: #c5ff72;
+            border: 1px solid #b8ed68;
+            border-radius: 7px;
+        }
+
+        .home-intro h1 {
+            margin: 0 0 0.2rem;
+            color: #24332d;
+            font-size: 1.8rem;
+        }
+
+        .home-intro p {
+            max-width: 610px;
+            color: #45483f;
+            font-size: 0.84rem;
+            line-height: 1.45;
+        }
+
+        .home-intro .word-reveal {
+            display: inline-block;
+            opacity: 0;
+            animation: home-word-in 560ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+            animation-delay: calc(var(--word-index) * 55ms);
+        }
+
+        @keyframes home-word-in {
+            from {
+                opacity: 0;
+                filter: blur(4px);
+                transform: translateY(0.4em);
+            }
+
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .home-intro .word-reveal {
+                opacity: 1;
+                animation: none;
+            }
+        }
+
+        .home-header-actions {
+            display: flex;
+            flex: 0 0 auto;
+            gap: 0.6rem;
+        }
+
+        .home-header-actions .home-action {
+            min-height: 36px;
+            padding: 0.5rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .home-header-actions .home-action.secondary {
+            color: #365474;
+            border-color: #d6e1ed;
+            background: #ffffff;
+        }
+
+        .home-section {
+            padding: 0;
+        }
+
+        .home-section h2 {
+            margin: 0;
+            color: #17345c;
+            font-size: 1rem;
+        }
+
+        .overview-heading {
+            margin-bottom: 0.55rem;
+        }
+
+        .overview-status {
+            font-size: 0.72rem;
+        }
+
+        .dataset-metric-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.65rem;
+            margin-top: 0;
+        }
+
+        .dataset-metric {
+            position: relative;
+            min-height: 82px;
+            padding: 0.8rem 0.9rem 0.65rem 3.2rem;
+            background: #ffffff;
+            border-color: #e2eaf2;
+            border-radius: 6px;
+            box-shadow: 0 2px 7px rgba(25, 60, 95, 0.025);
+        }
+
+        .dataset-metric::before {
+            position: absolute;
+            top: 0.8rem;
+            left: 0.75rem;
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            border-radius: 50%;
+            color: #109c74;
+            background: #e7f7f1;
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f1c0";
+        }
+
+        .dataset-metric:nth-child(2)::before {
+            color: #2d85d3;
+            background: #e9f3ff;
+            content: "\f00a";
+        }
+
+        .dataset-metric:nth-child(3)::before {
+            color: #e5484d;
+            background: #fff0f0;
+            content: "\f071";
+        }
+
+        .dataset-metric:nth-child(4)::before {
+            color: #d18a23;
+            background: #fff5e5;
+            content: "\f24d";
+        }
+
+        .dataset-metric strong {
+            margin: 0.05rem 0 0.1rem;
+            font-size: 1.15rem;
+            line-height: 1.15;
+        }
+
+        .dataset-metric span {
+            color: #607b9d;
+            font-size: 0.68rem;
+        }
+
+        .metric-delta {
+            display: block;
+            margin-top: 0.25rem;
+            color: #148c6b;
+            font-size: 0.64rem;
+        }
+
+        .metric-delta.negative {
+            color: #d64242;
+        }
+
+        .home-dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(290px, 0.9fr);
+            align-items: start;
+            gap: 0.7rem;
+        }
+
+        .home-column {
+            display: grid;
+            min-width: 0;
+            gap: 0.7rem;
+        }
+
+        .dashboard-panel {
+            min-width: 0;
+            padding: 0.75rem;
+            background: #ffffff;
+            border: 1px solid #e2eaf2;
+            border-radius: 7px;
+            box-shadow: 0 2px 7px rgba(25, 60, 95, 0.025);
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .panel-heading h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-heading h2 i {
+            color: #345b85;
+        }
+
+        .panel-meta {
+            padding: 0.22rem 0.48rem;
+            color: #118a69;
+            background: #e7f7f1;
+            border-radius: 999px;
+            font-size: 0.62rem;
+        }
+
+        .version-comparison {
+            grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+            gap: 0.45rem;
+            margin-top: 0;
+        }
+
+        .version-card {
+            padding: 0.65rem;
+            background: #ffffff;
+            border-color: #e1eaf2;
+            border-radius: 6px;
+        }
+
+        .dashboard-rotatable {
+            cursor: pointer;
+        }
+
+        .dashboard-rotatable.is-rotating {
+            animation: dashboard-card-spin 700ms ease-in-out;
+        }
+
+        @keyframes dashboard-card-spin {
+            from {
+                transform: perspective(900px) rotateY(0deg);
+            }
+
+            to {
+                transform: perspective(900px) rotateY(360deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dashboard-rotatable.is-rotating {
+                animation: none;
+            }
+        }
+
+        .version-card:first-child {
+            background: linear-gradient(180deg, #f3fbf8, #ffffff 42%);
+        }
+
+        .version-card:last-child {
+            background: linear-gradient(180deg, #f3f8ff, #ffffff 42%);
+            border-color: #d7e7f7;
+        }
+
+        .version-card header {
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0.15rem 0.55rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .version-card header span {
+            color: #148d6c;
+            font-weight: 700;
+        }
+
+        .version-card:last-child header span {
+            color: #267bd0;
+        }
+
+        .version-card header strong {
+            grid-column: 1 / -1;
+            font-size: 0.72rem;
+        }
+
+        .version-facts {
+            gap: 0.25rem;
+            padding-top: 0.55rem;
+        }
+
+        .version-fact {
+            padding-left: 0.35rem;
+            border-left: 1px solid #edf1f5;
+        }
+
+        .version-fact:first-child {
+            padding-left: 0;
+            border-left: 0;
+        }
+
+        .version-fact strong {
+            font-size: 0.78rem;
+        }
+
+        .version-fact span {
+            font-size: 0.61rem;
+        }
+
+        .version-arrow {
+            display: grid;
+            width: 28px;
+            height: 28px;
+            place-items: center;
+            color: #159a76;
+            background: #e9f8f3;
+            border-radius: 50%;
+            font-size: 0.75rem;
+        }
+
+        .change-list {
+            margin-top: 0;
+            border-top: 0;
+        }
+
+        .change-row {
+            grid-template-columns: 28px minmax(0, 1fr) auto;
+            gap: 0.48rem;
+            padding: 0.5rem 0;
+        }
+
+        .change-icon {
+            display: grid;
+            width: 25px;
+            height: 25px;
+            place-items: center;
+            border-radius: 50%;
+            color: #df4a4f;
+            background: #fff0f0;
+            font-size: 0.7rem;
+        }
+
+        .change-icon.improvement {
+            color: #109b76;
+            background: #e6f7f1;
+        }
+
+        .change-icon.changed {
+            color: #c98115;
+            background: #fff4e2;
+        }
+
+        .change-icon.neutral {
+            color: #3885ce;
+            background: #e9f3ff;
+        }
+
+        .change-copy {
+            display: grid;
+            min-width: 0;
+            gap: 0.1rem;
+        }
+
+        .change-name {
+            font-size: 0.7rem;
+        }
+
+        .change-value {
+            font-size: 0.63rem;
+            overflow-wrap: anywhere;
+        }
+
+        .change-status {
+            padding: 0.18rem 0.35rem;
+            font-size: 0.54rem;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .change-status.regression {
+            color: #be3439;
+            background: #fff0f0;
+        }
+
+        .change-status.improvement {
+            color: #11896c;
+            background: #e5f7f2;
+        }
+
+        .change-status.changed {
+            color: #a96808;
+            background: #fff5e4;
+        }
+
+        .change-status.review {
+            color: #2476be;
+            background: #e9f3ff;
+        }
+
+        .chart-panel .panel-heading {
+            margin-bottom: 0.4rem;
+        }
+
+        .chart-select {
+            max-width: 132px;
+            padding: 0.35rem 0.5rem;
+            color: #365474;
+            background: #ffffff;
+            border: 1px solid #dce5ef;
+            border-radius: 5px;
+            font-size: 0.68rem;
+        }
+
+        .format-choice {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin: 0.75rem 0;
+            color: #607b9d;
+            font-size: 0.82rem;
+        }
+
+        .format-choice select {
+            min-height: 34px;
+            padding: 0.35rem 0.65rem;
+            color: #23415f;
+            background: #ffffff;
+            border: 1px solid #dce5ef;
+            border-radius: 5px;
+            font: inherit;
+        }
+
+        .chart-title {
+            margin: 0.5rem 0 0.2rem;
+            color: #17345c;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .chart-stage {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            height: 130px;
+        }
+
+        .chart-axis {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.2rem 0 1.25rem;
+            color: #7890aa;
+            font-size: 0.58rem;
+        }
+
+        .chart-plot {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: end;
+            gap: 1.2rem;
+            padding: 0.3rem 0.7rem 0;
+            border-bottom: 1px solid #cddbea;
+            background: repeating-linear-gradient(to bottom, #edf2f7 0 1px, transparent 1px 25%);
+        }
+
+        .chart-bar-column {
+            display: grid;
+            grid-template-rows: 16px minmax(0, 1fr) 17px;
+            justify-items: center;
+            height: 100%;
+            color: #365474;
+            font-size: 0.62rem;
+        }
+
+        .chart-bar-value {
+            color: #17345c;
+            font-weight: 700;
+        }
+
+        .chart-bar {
+            align-self: end;
+            width: min(70%, 120px);
+            min-height: 2px;
+            background: #a6dfbf;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .chart-bar.version-b {
+            background: #10a078;
+        }
+
+        .recent-list {
+            display: grid;
+        }
+
+        .recent-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.46rem 0;
+            border-top: 1px solid #edf1f5;
+        }
+
+        .recent-item:first-child {
+            border-top: 0;
+        }
+
+        .recent-name {
+            color: #17345c;
+            font-size: 0.66rem;
+            font-weight: 700;
+        }
+
+        .recent-meta {
+            display: block;
+            margin-top: 0.12rem;
+            color: #7890aa;
+            font-size: 0.58rem;
+        }
+
+        .recent-version {
+            padding: 0.16rem 0.38rem;
+            color: #12896a;
+            background: #e6f7f1;
+            border-radius: 999px;
+            font-size: 0.6rem;
+        }
+
+        .panel-link {
+            color: #247bd0;
+            background: transparent;
+            border: 0;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+
+        .home-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.65rem 0.8rem;
+            color: #54708f;
+            background: #effaf6;
+            border: 1px solid #d8efe6;
+            border-radius: 6px;
+            font-size: 0.68rem;
+        }
+
+        .home-footer strong {
+            color: #158a6b;
+        }
+
+        .home-footer button {
+            color: #118a69;
+            background: none;
+            border: 0;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .report-empty {
+            display: grid;
+            min-height: 220px;
+            place-content: center;
+            gap: 0.55rem;
+            text-align: center;
+            color: #607b9d;
+        }
+
+        .report-empty h1 {
+            color: #17345c;
+            font-size: 1.4rem;
+        }
+
+        #demoSourcePanel {
+            width: 100%;
+        }
+
+        #demoSourcePanel>.demo-presets-panel {
+            width: 100%;
+            margin: 0;
+            padding: 1.15rem;
+            background: #ffffff;
+            border: 1px solid #dce5e9;
+            border-radius: 8px;
+            box-shadow: 0 3px 12px rgba(35, 54, 63, 0.05);
+        }
+
+        .demo-presets-header {
+            align-items: flex-start;
+            margin-bottom: 0.35rem;
+        }
+
+        .demo-presets-header h2 {
+            color: #243847;
+            font-size: 1.08rem;
+        }
+
+        .demo-presets-header h2 i {
+            color: #28735f;
+        }
+
+        .demo-presets-copy {
+            margin: 0 0 1rem;
+            color: #607581;
+            font-size: 0.78rem;
+        }
+
+        .demo-preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .demo-preset-option {
+            display: grid;
+            width: 100%;
+            min-width: 0;
+            min-height: 108px;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.8rem;
+            color: #294451;
+            background: #fbfcfc;
+            border: 1px solid #dce5e9;
+            border-radius: 6px;
+            text-align: left;
+            transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+        }
+
+        .demo-preset-option:hover {
+            color: #203b46;
+            background: #f2f8f5;
+            border-color: #9dc9ba;
+            box-shadow: 0 4px 12px rgba(37, 96, 78, 0.08);
+        }
+
+        .demo-preset-option>i:first-child {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            color: #28735f;
+            background: #eaf4f0;
+            border-radius: 5px;
+        }
+
+        .demo-preset-option.healthcare>i:first-child {
+            color: #376d8d;
+            background: #eaf2f7;
+        }
+
+        .demo-preset-option.academics>i:first-child {
+            color: #7c3aed;
+            background: #f3e8ff;
+        }
+
+        .demo-preset-option.software>i:first-child {
+            color: #ea580c;
+            background: #ffedd5;
+        }
+
+        .domain-badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.28rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .domain-badge-tag.finance {
+            background: rgba(52, 232, 154, 0.15);
+            color: #34e89a;
+            border: 1px solid rgba(52, 232, 154, 0.35);
+        }
+
+        .domain-badge-tag.healthcare {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+
+        .domain-badge-tag.academics {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+
+        .domain-badge-tag.software_systems {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+            border: 1px solid rgba(251, 146, 60, 0.35);
+        }
+
+        .domain-info-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.1rem;
+            border-radius: 8px;
+            background: rgba(2, 22, 12, 0.55);
+            border: 1px solid rgba(52, 232, 154, 0.2);
+            transition: all 0.25s ease;
+        }
+
+        .demo-preset-copy {
+            display: grid;
+            min-width: 0;
+            gap: 0.25rem;
+        }
+
+        .demo-preset-copy strong {
+            color: #243847;
+            font-size: 0.82rem;
+            line-height: 1.3;
+        }
+
+        .demo-preset-copy small {
+            color: #657985;
+            font-size: 0.68rem;
+            line-height: 1.45;
+        }
+
+        .demo-preset-option>i:last-child {
+            color: #71828a;
+            font-size: 0.72rem;
+        }
+
+        .compare-source-switch {
+            gap: 0.2rem;
+            margin-bottom: 0.8rem;
+            padding: 3px;
+            background: #f1f5f4;
+            border: 1px solid #dce5e4;
+            border-radius: 6px;
+        }
+
+        .compare-source-switch .mode-toggle-btn {
+            min-width: 96px;
+            min-height: 34px;
+            padding: 0.4rem 0.7rem;
+            color: #5b6f77;
+            border-radius: 4px;
+            font-size: 0.76rem;
+            font-weight: 600;
+        }
+
+        .compare-source-switch .mode-toggle-btn.active {
+            color: #ffffff;
+            background: #286b58;
+            box-shadow: none;
+        }
+
+        .compare-source-switch .mode-toggle-btn:not(.active):hover {
+            color: #294b45;
+            background: #e5ece9;
+        }
+
+        .compare-source-switch .mode-toggle-btn:focus-visible {
+            outline: 2px solid #28735f;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 980px) {
+            .app-shell {
+                grid-template-columns: 150px minmax(0, 1fr);
+            }
+
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .home-dashboard-grid {
+                grid-template-columns: minmax(0, 1fr) minmax(250px, 0.85fr);
+            }
+
+            .version-facts {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .demo-preset-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .app-shell {
+                display: block;
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 52px;
+                z-index: 90;
+                width: 100%;
+                height: auto;
+                min-height: 0;
+                padding: 0.4rem 0.55rem;
+                border-right: 0;
+                border-bottom: 1px solid #e3eaf2;
+            }
+
+            .sidebar .primary-nav {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .sidebar .tab-btn {
+                flex: 1 0 auto;
+                justify-content: center;
+                min-height: 36px;
+            }
+
+            .sidebar-note {
+                display: none;
+            }
+
+            .dashboard-container {
+                padding: 0.9rem;
+            }
+
+            .home-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .home-intro {
+                align-items: flex-start;
+            }
+
+            .demo-preset-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .navbar {
+                padding: 0 0.7rem;
+            }
+
+            .user-badge {
+                display: none;
+            }
+
+            .dataset-metric-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .home-intro {
+                display: grid;
+            }
+
+            .home-intro h1 {
+                font-size: 1.5rem;
+            }
+
+            .home-header-actions {
+                grid-row: 2;
+            }
+
+            .version-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .version-arrow {
+                justify-self: center;
+                transform: rotate(90deg);
+            }
+        }
+
+        /* ========================================================
+           SQL WORKBENCH, VISUAL EXPLORER & DISCOVERY STYLES
+           ======================================================== */
+        /* ========================================================
+           SQL WORKBENCH, VISUAL EXPLORER & DISCOVERY STYLES
+           ======================================================== */
+        .workbench-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .workbench-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .table-browser {
+            background: rgba(5, 25, 16, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.25rem;
+            max-height: 750px;
+            overflow-y: auto;
+        }
+
+        .table-browser h3 {
+            font-size: 1rem;
+            color: #34e89a;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dataset-tree-item {
+            border: 1px solid rgba(52, 232, 154, 0.15);
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
+            background: rgba(2, 22, 12, 0.6);
+            overflow: hidden;
+        }
+
+        .dataset-tree-header {
+            padding: 0.65rem 0.85rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #ffffff;
+            transition: background 0.2s;
+        }
+
+        .dataset-tree-header:hover {
+            background: rgba(52, 232, 154, 0.1);
+        }
+
+        .dataset-tree-columns {
+            padding: 0.5rem 0.85rem;
+            border-top: 1px solid rgba(52, 232, 154, 0.1);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .column-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #cbd5e1;
+        }
+
+        .type-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            background: rgba(52, 232, 154, 0.15);
+            color: #7affbf;
+            font-family: monospace;
+        }
+
+        .sql-editor-card {
+            background: rgba(5, 25, 16, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .ai-nl-bar {
+            display: flex;
+            gap: 0.6rem;
+            background: rgba(2, 22, 12, 0.9);
+            border: 1px solid rgba(52, 232, 154, 0.4);
+            border-radius: 12px;
+            padding: 0.5rem 0.8rem;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(52, 232, 154, 0.1);
+        }
+
+        .ai-nl-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 0.92rem;
+            outline: none;
+            padding: 0.3rem 0;
+        }
+
+        .ai-nl-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-ai-generate {
+            background: linear-gradient(135deg, #059669, #34e89a);
+            color: #02160c;
+            border: none;
+            font-weight: 700;
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            transition: transform 0.15s, opacity 0.2s;
+        }
+
+        .btn-ai-generate:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(52, 232, 154, 0.4);
+        }
+
+        .template-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .template-chip {
+            background: rgba(52, 232, 154, 0.08);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            color: #7affbf;
+            font-size: 0.78rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-chip:hover {
+            background: rgba(52, 232, 154, 0.2);
+            color: #ffffff;
+            border-color: #34e89a;
+        }
+
+        .sql-textarea {
+            width: 100%;
+            min-height: 160px;
+            background: #021209;
+            border: 1px solid rgba(52, 232, 154, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+            padding: 1rem;
+            outline: none;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .sql-textarea:focus {
+            border-color: #34e89a;
+            box-shadow: 0 0 12px rgba(52, 232, 154, 0.25);
+        }
+
+        .sql-actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .query-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.65rem;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .status-pill.success {
+            background: rgba(52, 232, 154, 0.2);
+            color: #34e89a;
+            border: 1px solid rgba(52, 232, 154, 0.4);
+        }
+
+        .status-pill.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .results-container {
+            margin-top: 1rem;
+            background: rgba(2, 22, 12, 0.7);
+            border: 1px solid rgba(52, 232, 154, 0.2);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .results-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid rgba(52, 232, 154, 0.2);
+            background: rgba(5, 25, 16, 0.9);
+        }
+
+        .results-view-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            color: #cbd5e1;
+            padding: 0.35rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+
+        .view-btn.active {
+            background: rgba(52, 232, 154, 0.2);
+            border-color: #34e89a;
+            color: #34e89a;
+            font-weight: 600;
+        }
+
+        .results-table-wrap {
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        .results-table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .results-table-wrap th {
+            position: sticky;
+            top: 0;
+            background: #032012;
+            color: #34e89a;
+            padding: 0.65rem 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(52, 232, 154, 0.3);
+            white-space: nowrap;
+        }
+
+        .results-table-wrap td {
+            padding: 0.55rem 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        .results-table-wrap tr:hover td {
+            background: rgba(52, 232, 154, 0.05);
+        }
+
+        /* Chart Canvas Area */
+        .chart-visualizer-stage {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 300px;
+        }
+
+        .bar-chart-grid {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            height: 240px;
+            padding: 1rem;
+            border-left: 2px solid rgba(52, 232, 154, 0.4);
+            border-bottom: 2px solid rgba(52, 232, 154, 0.4);
+            overflow-x: auto;
+        }
+
+        .bar-item {
+            flex: 1;
+            min-width: 48px;
+            max-width: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            gap: 0.4rem;
+        }
+
+        .bar-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #34e89a 0%, #059669 100%);
+            border-radius: 6px 6px 0 0;
+            transition: height 0.4s ease;
+            box-shadow: 0 0 10px rgba(52, 232, 154, 0.3);
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px;
+            text-align: center;
+        }
+
+        .bar-val {
+            font-size: 0.72rem;
+            color: #34e89a;
+            font-weight: 600;
+        }
+
+        /* Discovery Catalogue Cards */
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .discovery-card {
+            background: rgba(5, 25, 16, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .discovery-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(52, 232, 154, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(52, 232, 154, 0.15);
+        }
+
+        .discovery-badge {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: rgba(52, 232, 154, 0.15);
+            color: #34e89a;
+            width: fit-content;
+        }
+
+        /* Visual Explorer Controls */
+        .explorer-form-card {
+            background: rgba(5, 25, 16, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 2fr auto;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        @media (max-width: 700px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Lineage Timeline */
+        .lineage-card {
+            background: rgba(5, 25, 16, 0.85);
+            border: 1px solid rgba(52, 232, 154, 0.25);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <a href="dashboard.html" class="brand">
+            <div class="brand-logo">
+                <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div class="brand-text">
+                DataDock <span>AI</span>
+            </div>
+        </a>
+
+        <div class="user-nav">
+            <span class="notification-icon" aria-label="Notifications"><i class="fa-regular fa-bell"></i></span>
+            <div class="user-badge">
+                <i class="fa-solid fa-user-circle"></i>
+                <span id="userDisplayEmail">User</span>
+            </div>
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <nav class="primary-nav" aria-label="Main navigation">
+                <button class="tab-btn active" data-tab="tab-home"><i class="fa-solid fa-house"></i> Home</button>
+                <button class="tab-btn" data-tab="tab-upload"><i class="fa-solid fa-database"></i> Datasets</button>
+                <button class="tab-btn" data-tab="tab-versions"><i class="fa-solid fa-clock-rotate-left"></i>
+                    History</button>
+                <button class="tab-btn" data-tab="tab-sql"><i class="fa-solid fa-terminal"></i> SQL Workbench</button>
+                <button class="tab-btn" data-tab="tab-explorer"><i class="fa-solid fa-wand-magic-sparkles"></i> Visual
+                    Explorer</button>
+                <button class="tab-btn" data-tab="tab-discovery"><i class="fa-solid fa-globe"></i> Discovery</button>
+                <button class="tab-btn" data-tab="tab-compare"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    Compare</button>
+                <button class="tab-btn" data-tab="tab-reports"><i class="fa-regular fa-file-lines"></i> Reports</button>
+                <button class="tab-btn" data-tab="tab-lineage"><i class="fa-solid fa-clock-rotate-left"></i>
+                    Lineage</button>
+            </nav>
+            <div class="sidebar-note"><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Better data.<br>Better
+                    decisions.</strong></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-container">
+
+            <div class="tab-pane home-pane" id="tab-home">
+                <header class="home-intro">
+                    <div>
+                        <h1 aria-label="DataDock AI"><span class="word-reveal" style="--word-index: 0"
+                                aria-hidden="true">DataDock</span> <span class="word-reveal" style="--word-index: 1"
+                                aria-hidden="true">AI</span></h1>
+                        <p
+                            aria-label="Compare dataset versions, detect data-quality regressions, and understand what changed before it affects your analysis.">
+                            <span class="word-reveal" style="--word-index: 2" aria-hidden="true">Compare</span> <span
+                                class="word-reveal" style="--word-index: 3" aria-hidden="true">dataset</span> <span
+                                class="word-reveal" style="--word-index: 4" aria-hidden="true">versions,</span> <span
+                                class="word-reveal" style="--word-index: 5" aria-hidden="true">detect</span> <span
+                                class="word-reveal" style="--word-index: 6" aria-hidden="true">data-quality</span> <span
+                                class="word-reveal" style="--word-index: 7" aria-hidden="true">regressions,</span> <span
+                                class="word-reveal" style="--word-index: 8" aria-hidden="true">and</span> <span
+                                class="word-reveal" style="--word-index: 9" aria-hidden="true">understand</span> <span
+                                class="word-reveal" style="--word-index: 10" aria-hidden="true">what</span> <span
+                                class="word-reveal" style="--word-index: 11" aria-hidden="true">changed</span> <span
+                                class="word-reveal" style="--word-index: 12" aria-hidden="true">before</span> <span
+                                class="word-reveal" style="--word-index: 13" aria-hidden="true">it</span> <span
+                                class="word-reveal" style="--word-index: 14" aria-hidden="true">affects</span> <span
+                                class="word-reveal" style="--word-index: 15" aria-hidden="true">your</span> <span
+                                class="word-reveal" style="--word-index: 16" aria-hidden="true">analysis.</span></p>
+                    </div>
+                    <div class="home-header-actions">
+                        <button class="home-action" type="button" data-tab-target="tab-upload"><i
+                                class="fa-solid fa-cloud-arrow-up"></i> Upload Dataset</button>
+                        <button class="home-action secondary" type="button" id="tryDemoBtn"><i
+                                class="fa-solid fa-sparkles"></i> Try Demo</button>
+                    </div>
+                </header>
+
+                <section class="home-section" aria-labelledby="dataset-overview-heading">
+                    <div class="overview-heading">
+                        <h2 id="dataset-overview-heading">Dataset Overview</h2>
+                        <span class="overview-status" id="overviewStatus">Run a comparison to see dataset
+                            metrics.</span>
+                    </div>
+                    <div class="dataset-metric-grid">
+                        <article class="dataset-metric"><strong id="overviewRows">--</strong><span>Total
+                                Rows</span><small class="metric-delta" id="overviewRowsDelta">vs. previous
+                                version</small></article>
+                        <article class="dataset-metric"><strong id="overviewColumns">--</strong><span>Total
+                                Columns</span><small class="metric-delta" id="overviewColumnsDelta">vs. previous
+                                version</small></article>
+                        <article class="dataset-metric"><strong id="overviewMissing">--</strong><span>Missing
+                                Values</span><small class="metric-delta" id="overviewMissingDelta">vs. previous
+                                version</small></article>
+                        <article class="dataset-metric"><strong id="overviewDuplicates">--</strong><span>Duplicate
+                                Records</span><small class="metric-delta" id="overviewDuplicatesDelta">vs. previous
+                                version</small></article>
+                    </div>
+                </section>
+
+                <div class="home-dashboard-grid">
+                    <div class="home-column">
+                        <section class="dashboard-panel" aria-labelledby="version-comparison-heading">
+                            <div class="panel-heading">
+                                <h2 id="version-comparison-heading"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    Version Comparison</h2>
+                                <span class="panel-meta"><i class="fa-solid fa-circle"></i> Monitoring</span>
+                            </div>
+                            <div class="version-comparison">
+                                <article class="version-card">
+                                    <header><span>Version 1</span><strong id="overviewNameA">No version
+                                            selected</strong></header>
+                                    <div class="version-facts">
+                                        <div class="version-fact"><strong
+                                                id="overviewRowsA">--</strong><span>Rows</span></div>
+                                        <div class="version-fact"><strong
+                                                id="overviewColumnsA">--</strong><span>Columns</span></div>
+                                        <div class="version-fact"><strong id="overviewMissingA">--</strong><span>Missing
+                                                Values</span></div>
+                                        <div class="version-fact"><strong
+                                                id="overviewDuplicatesA">--</strong><span>Duplicates</span></div>
+                                    </div>
+                                </article>
+                                <i class="fa-solid fa-arrow-right version-arrow" aria-hidden="true"></i>
+                                <article class="version-card">
+                                    <header><span>Version 2</span><strong id="overviewNameB">No version
+                                            selected</strong></header>
+                                    <div class="version-facts">
+                                        <div class="version-fact"><strong
+                                                id="overviewRowsB">--</strong><span>Rows</span></div>
+                                        <div class="version-fact"><strong
+                                                id="overviewColumnsB">--</strong><span>Columns</span></div>
+                                        <div class="version-fact"><strong id="overviewMissingB">--</strong><span>Missing
+                                                Values</span></div>
+                                        <div class="version-fact"><strong
+                                                id="overviewDuplicatesB">--</strong><span>Duplicates</span></div>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
+
+                        <section class="dashboard-panel chart-panel" aria-labelledby="chart-heading">
+                            <div class="panel-heading">
+                                <h2 id="chart-heading"><i class="fa-solid fa-chart-column"></i> Key Comparison Charts
+                                </h2>
+                                <select class="chart-select" id="chartMetricSelect" aria-label="Chart metric">
+                                    <option value="missing">Missing Values</option>
+                                    <option value="rows">Total Rows</option>
+                                    <option value="quality">Quality Score</option>
+                                </select>
+                            </div>
+                            <div class="chart-title" id="chartTitle">Missing Values Rate</div>
+                            <div class="chart-stage" id="comparisonChart" role="img"
+                                aria-label="Comparison chart will appear after analysis">
+                                <div class="chart-axis" id="chartAxis">
+                                    <span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span>
+                                </div>
+                                <div class="chart-plot">
+                                    <div class="chart-bar-column"><span class="chart-bar-value"
+                                            id="chartValueA">--</span>
+                                        <div class="chart-bar" id="chartBarA" style="height: 0%;"></div><span>Version
+                                            1</span>
+                                    </div>
+                                    <div class="chart-bar-column"><span class="chart-bar-value"
+                                            id="chartValueB">--</span>
+                                        <div class="chart-bar version-b" id="chartBarB" style="height: 0%;"></div>
+                                        <span>Version 2</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="home-column">
+                        <section class="dashboard-panel" aria-labelledby="what-changed-heading">
+                            <div class="panel-heading">
+                                <h2 id="what-changed-heading"><i class="fa-solid fa-arrow-trend-up"></i> What Changed?
+                                </h2>
+                            </div>
+                            <div class="change-list" id="homeChangesList" aria-live="polite">
+                                <p class="home-empty">Run a comparison to review detected changes.</p>
+                            </div>
+                        </section>
+
+                        <section class="dashboard-panel" aria-labelledby="recent-datasets-heading">
+                            <div class="panel-heading">
+                                <h2 id="recent-datasets-heading"><i class="fa-solid fa-database"></i> Recent Datasets
+                                </h2>
+                                <button class="panel-link" type="button" data-tab-target="tab-versions">View All <i
+                                        class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                            <div class="recent-list" id="recentDatasetsList">
+                                <p class="home-empty">No uploaded datasets yet.</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <footer class="home-footer">
+                    <span><i class="fa-regular fa-lightbulb"></i> <strong>From data to better decisions.</strong>
+                        DataDock AI helps you spot changes, reduce risks, and keep your data reliable.</span>
+                    <button type="button" data-tab-target="tab-upload">Get Started <i
+                            class="fa-solid fa-arrow-right"></i></button>
+                </footer>
+            </div>
+
+            <!-- TAB 1: UPLOAD & HISTORY -->
+            <div class="tab-pane" id="tab-upload">
+
+                <!-- Stats Grid -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-file-csv"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statTotalFiles">0</h3>
+                            <p>Datasets Uploaded</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-list-ol"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statTotalRows">0</h3>
+                            <p>Total Rows Monitored</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>100%</h3>
+                            <p>Quality Monitoring Status</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CSV Upload Card -->
+                <section class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-cloud-arrow-up"></i> Upload Dataset</h2>
+                    </div>
+
+                    <label class="format-choice" for="uploadFormatSelect">
+                        File format
+                        <select id="uploadFormatSelect">
+                            <option value=".csv">CSV (.csv)</option>
+                            <option value=".xlsx">Excel (.xlsx)</option>
+                        </select>
+                    </label>
+
+                    <div class="dropzone" id="dropZone">
+                        <div class="dropzone-icon">
+                            <i class="fa-solid fa-file-csv"></i>
+                        </div>
+                        <div class="dropzone-text">
+                            <h4 id="uploadDropzoneHint">Drag & Drop a .csv file here</h4>
+                            <p>or click to browse from your computer (Max file size: 50MB)</p>
+                        </div>
+
+                        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+
+                        <div id="fileSelectionBadge" style="display: none;">
+                            <div class="selected-file-badge">
+                                <i class="fa-solid fa-file-code"></i>
+                                <span id="selectedFileName">dataset.csv</span>
+                                <span id="selectedFileSize" style="opacity: 0.7;">(0 KB)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="uploadBtn" disabled>
+                        <i class="fa-solid fa-upload"></i> Upload & Process Dataset
+                    </button>
+
+                    <div class="alert-msg" id="uploadMessage"></div>
+                </section>
+
+            </div>
+
+            <div class="tab-pane" id="tab-versions">
+                <!-- CSV Upload History Table -->
+                <section class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-clock-rotate-left"></i> Dataset Upload History</h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Filename</th>
+                                    <th>Upload Date</th>
+                                    <th>File Size</th>
+                                    <th>Rows</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- TAB: CSV COMPARISON & PROFILING -->
+            <div class="tab-pane" id="tab-compare">
+
+                <div class="compare-domain-bar">
+                    <span class="domain-label"
+                        style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase;"><i
+                            class="fa-solid fa-layer-group"></i> Domain:</span>
+                    <button class="mode-toggle-btn domain-option active" id="domainFinanceBtn"
+                        style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; cursor: pointer;"><i
+                            class="fa-solid fa-building-columns"></i> Finance</button>
+                    <button class="mode-toggle-btn domain-option" id="domainHealthcareBtn"
+                        style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; cursor: pointer;"><i
+                            class="fa-solid fa-hospital-user"></i> Healthcare</button>
+                    <button class="mode-toggle-btn domain-option" id="domainAcademicsBtn"
+                        style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; cursor: pointer;"><i
+                            class="fa-solid fa-graduation-cap"></i> Academics & Education</button>
+                    <button class="mode-toggle-btn domain-option" id="domainSoftwareBtn"
+                        style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; cursor: pointer;"><i
+                            class="fa-solid fa-server"></i> IT & Software Systems</button>
+                </div>
+
+                <div class="mode-toggle compare-source-switch" role="tablist" aria-label="Comparison source">
+                    <button class="mode-toggle-btn active" id="demoSourceButton" type="button" role="tab"
+                        aria-selected="true" aria-controls="demoSourcePanel">Demo data</button>
+                    <button class="mode-toggle-btn" id="realSourceButton" type="button" role="tab" aria-selected="false"
+                        aria-controls="realSourcePanel">My data</button>
+                </div>
+
+                <div class="compare-source-panel active" id="demoSourcePanel" role="tabpanel"
+                    aria-labelledby="demoSourceButton">
+                    <section class="card demo-presets-panel">
+                        <div class="card-header demo-presets-header">
+                            <h2><i class="fa-solid fa-bolt"></i> Demo Dataset Comparisons</h2>
+                            <span id="demoDomainTag" class="domain-badge-tag finance"><i
+                                    class="fa-solid fa-building-columns"></i> Finance Domain</span>
+                        </div>
+                        <div class="domain-info-banner" id="domainInfoBanner">
+                            <span id="domainDescriptionText" style="color: #cbd5e1; font-size: 0.88rem;">
+                                <i class="fa-solid fa-shield-halved" style="color: #34e89a; margin-right: 0.4rem;"></i>
+                                Evaluating financial datasets against regulatory validation rules (Transaction ID
+                                uniqueness, non-negative amounts, credit score 300–900).
+                            </span>
+                        </div>
+
+                        <!-- Finance Presets -->
+                        <div class="demo-preset-grid domain-preset-container" id="domainPresetsFinance">
+                            <button class="btn-action domain-preset-finance demo-preset-option" id="presetBankBtn"
+                                type="button">
+                                <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Bank Transactions</strong><small>10,000 to 12,000
+                                        rows · Missing amounts & duplicate Tx IDs</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn-action domain-preset-finance demo-preset-option" id="presetLoanBtn"
+                                type="button">
+                                <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Loan Portfolio</strong><small>5,000 to 5,500
+                                        loans · Credit score policy violation (950) & negative amounts</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <!-- Healthcare Presets -->
+                        <div class="demo-preset-grid domain-preset-container" id="domainPresetsHealthcare"
+                            style="display: none;">
+                            <button class="btn-action domain-preset-healthcare demo-preset-option healthcare"
+                                id="presetHealthBtn" type="button">
+                                <i class="fa-solid fa-hospital-user" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Patient Diagnostics</strong><small>5,000 to 6,000
+                                        records · Glucose missingness 2% to 14% & invalid BMI</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn-action domain-preset-healthcare demo-preset-option healthcare"
+                                id="presetClinicalVitalsBtn" type="button">
+                                <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Clinical Vitals & EHR</strong><small>4,500 to
+                                        5,200 records · Blood glucose 550 mg/dL & extreme BMI (88.0)</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <!-- Academics Presets -->
+                        <div class="demo-preset-grid domain-preset-container" id="domainPresetsAcademics"
+                            style="display: none;">
+                            <button class="btn-action domain-preset-academics demo-preset-option academics"
+                                id="presetAcademicsBtn" type="button">
+                                <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Student Academic Records</strong><small>5,000 to
+                                        6,000 students · GPA scale violation (5.20) & attendance drift</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn-action domain-preset-academics demo-preset-option academics"
+                                id="presetCourseEnrollmentBtn" type="button">
+                                <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Course Enrollments & Grades</strong><small>4,000
+                                        to 4,800 records · Exam score > 100% & missing letter grades</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <!-- IT Software Presets -->
+                        <div class="demo-preset-grid domain-preset-container" id="domainPresetsSoftware"
+                            style="display: none;">
+                            <button class="btn-action domain-preset-software demo-preset-option software"
+                                id="presetSoftwareBtn" type="button">
+                                <i class="fa-solid fa-server" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>System Telemetry & Logs</strong><small>5,000 to
+                                        6,200 logs · CPU overload (145%), negative latency & 500 errors</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn-action domain-preset-software demo-preset-option software"
+                                id="presetMicroservicesBtn" type="button">
+                                <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+                                <span class="demo-preset-copy"><strong>Microservices API & Uptime</strong><small>4,200
+                                        to 5,100 requests · SLA uptime drop to 82% & HTTP 502/504 spikes</small></span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="compare-source-panel" id="realSourcePanel" role="tabpanel"
+                    aria-labelledby="realSourceButton" hidden>
+                    <section class="card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-sliders"></i> <span id="customDomainTitle">Finance</span> Custom
+                                Dataset Comparison</h2>
+                            <span id="customDomainTag" class="domain-badge-tag finance"><i
+                                    class="fa-solid fa-building-columns"></i> Finance Domain</span>
+                        </div>
+                        <div class="domain-info-banner" id="customDomainInfoBanner">
+                            <span id="customDomainRuleNotice" style="color: #cbd5e1; font-size: 0.88rem;">
+                                <i class="fa-solid fa-shield-halved" style="color: #34e89a; margin-right: 0.4rem;"></i>
+                                Configured for <strong>Finance</strong>. Datasets will be audited against financial
+                                balance, transaction integrity, and loan rules.
+                            </span>
+                        </div>
+
+                        <div class="mode-toggle">
+                            <button class="mode-toggle-btn active" id="modeUploadFilesBtn">Upload 2 New Dataset
+                                Files</button>
+                            <button class="mode-toggle-btn" id="modeSelectHistoryBtn">Select from History</button>
+                        </div>
+
+                        <!-- Mode 1: Dual Upload Dropzones -->
+                        <div id="compareUploadModeView">
+                            <div class="dual-dropzone-grid">
+                                <div>
+                                    <div class="dropzone-label">
+                                        <i class="fa-solid fa-file-export"></i> Baseline File (Version 1)
+                                    </div>
+                                    <label class="format-choice" for="formatSelectA">
+                                        File format
+                                        <select id="formatSelectA">
+                                            <option value=".csv">CSV (.csv)</option>
+                                            <option value=".xlsx">Excel (.xlsx)</option>
+                                        </select>
+                                    </label>
+                                    <div class="dropzone" id="dropZoneA" style="padding: 2rem 1rem;">
+                                        <div class="dropzone-icon" style="font-size: 2rem;"><i
+                                                class="fa-solid fa-file-csv"></i></div>
+                                        <div class="dropzone-text">
+                                            <h5 id="dropzoneHintA" style="font-size:0.95rem;">Drop a .csv file (File A)
+                                            </h5>
+                                        </div>
+                                        <input type="file" id="fileInputA" accept=".csv" style="display:none;">
+                                        <div id="badgeA" style="display:none; margin-top:0.6rem;">
+                                            <span class="selected-file-badge" style="font-size:0.8rem;"
+                                                id="nameA">file_a.csv</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="dropzone-label">
+                                        <i class="fa-solid fa-file-import"></i> Comparison File (Version 2)
+                                    </div>
+                                    <label class="format-choice" for="formatSelectB">
+                                        File format
+                                        <select id="formatSelectB">
+                                            <option value=".csv">CSV (.csv)</option>
+                                            <option value=".xlsx">Excel (.xlsx)</option>
+                                        </select>
+                                    </label>
+                                    <div class="dropzone" id="dropZoneB" style="padding: 2rem 1rem;">
+                                        <div class="dropzone-icon" style="font-size: 2rem; color:#7affbf;"><i
+                                                class="fa-solid fa-file-csv"></i></div>
+                                        <div class="dropzone-text">
+                                            <h5 id="dropzoneHintB" style="font-size:0.95rem;">Drop a .csv file (File B)
+                                            </h5>
+                                        </div>
+                                        <input type="file" id="fileInputB" accept=".csv" style="display:none;">
+                                        <div id="badgeB" style="display:none; margin-top:0.6rem;">
+                                            <span class="selected-file-badge" style="font-size:0.8rem;"
+                                                id="nameB">file_b.csv</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mode 2: History Selector Dropdowns -->
+                        <div id="compareHistoryModeView" style="display: none; margin-top: 1rem;">
+                            <div class="dual-dropzone-grid">
+                                <div>
+                                    <label class="dropzone-label"><i class="fa-solid fa-database"></i> Baseline Dataset
+                                        (File A):</label>
+                                    <select id="selectFileA" class="select-input">
+                                        <option value="">-- Select Baseline Dataset --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="dropzone-label"><i class="fa-solid fa-database"></i> Comparison
+                                        Dataset (File B):</label>
+                                    <select id="selectFileB" class="select-input">
+                                        <option value="">-- Select Comparison Dataset --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem;">
+                            <label class="dropzone-label"><i class="fa-solid fa-key"></i> Key Matching Column (Optional
+                                for Row Drift):</label>
+                            <input type="text" id="keyColumnInput" class="text-input"
+                                placeholder="e.g. Transaction_ID, Loan_ID, Account_No, ID (Leave blank to auto-detect)">
+                        </div>
+
+                        <button class="btn-primary" id="runCompareBtn" style="margin-top: 1.5rem;">
+                            <i class="fa-solid fa-bolt"></i> <span id="runCompareBtnLabel">Run Financial Profiling &
+                                Comparison</span>
+                        </button>
+
+                        <div class="alert-msg" id="compareMessage"></div>
+                    </section>
+                </div>
+
+            </div>
+
+            <div class="tab-pane" id="tab-reports">
+                <section class="dashboard-panel report-empty" id="reportEmptyState">
+                    <h1>No comparison report yet</h1>
+                    <p>Run a dataset comparison to generate an evidence-based report.</p>
+                    <button class="home-action" type="button" data-tab-target="tab-compare">Go to Compare</button>
+                </section>
+
+                <!-- PROFILING & COMPARISON RESULTS VIEW -->
+                <section class="card" id="comparisonResultsCard" style="display: none;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-line"></i> Financial Profiling & Comparison Results</h2>
+                        <div style="display: flex; gap: 0.6rem;">
+                            <button class="btn-action" id="exportCsvBtn"><i class="fa-solid fa-file-csv"></i> Export
+                                Report (CSV)</button>
+                            <button class="btn-action" id="exportReportBtn"><i class="fa-solid fa-file-code"></i> Export
+                                Report (JSON)</button>
+                        </div>
+                    </div>
+
+                    <!-- Executive Summary Cards -->
+                    <div class="results-overview" id="overviewCardsContainer">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Grounded Executive AI Audit Banner -->
+                    <div id="aiAuditNarrativeBanner" style="margin-bottom: 1.5rem;"></div>
+
+                    <!-- Schema Drift Alert Banner -->
+                    <div id="schemaDriftBanner"></div>
+
+                    <!-- Subtabs -->
+                    <div class="subtabs-nav">
+                        <button class="subtab-btn active" data-subtab="subtab-classification">
+                            <i class="fa-solid fa-list-check"></i> Regression Classification
+                        </button>
+                        <button class="subtab-btn" data-subtab="subtab-validation">
+                            <i class="fa-solid fa-shield-halved"></i> Validation Rules & Audit
+                        </button>
+                        <button class="subtab-btn" data-subtab="subtab-row-inspector">
+                            <i class="fa-solid fa-filter-circle-xmark"></i> Row-Level Violation Inspector
+                        </button>
+                        <button class="subtab-btn" data-subtab="subtab-financial">
+                            <i class="fa-solid fa-coins"></i> Financial Metrics Summary
+                        </button>
+                        <button class="subtab-btn" data-subtab="subtab-columns">
+                            <i class="fa-solid fa-table-columns"></i> Column Profiling & Schema
+                        </button>
+                        <button class="subtab-btn" data-subtab="subtab-rows">
+                            <i class="fa-solid fa-code-compare"></i> Row Discrepancies & Sample Diff
+                        </button>
+                    </div>
+
+                    <!-- Subtab 0: Regression Classification -->
+                    <div class="subtab-content active" id="subtab-classification">
+                        <div id="classificationSummaryBadge" style="margin-bottom: 1rem;"></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Classification Label</th>
+                                        <th>Finding Title</th>
+                                        <th>Evidence & Details</th>
+                                        <th>Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classificationTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 0.5: Financial Validation Rules -->
+                    <div class="subtab-content" id="subtab-validation">
+                        <div id="validationSummaryBanner" style="margin-bottom: 1rem;"></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Validation Rule</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Severity</th>
+                                        <th>Violations</th>
+                                        <th>Affected Columns & Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="validationTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 0.6: Row-Level Violation Inspector -->
+                    <div class="subtab-content" id="subtab-row-inspector">
+                        <div id="rowViolationInspectorHeader" style="margin-bottom: 1rem;"></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Row #</th>
+                                        <th>Column</th>
+                                        <th>Offending Value</th>
+                                        <th>Rule Name</th>
+                                        <th>Rule Description</th>
+                                        <th>Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rowViolationTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 1: Financial Metrics -->
+                    <div class="subtab-content" id="subtab-financial">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Financial Column</th>
+                                        <th>Sum (Baseline A)</th>
+                                        <th>Sum (Comparison B)</th>
+                                        <th>Sum Delta</th>
+                                        <th>% Change</th>
+                                        <th>Mean (A / B)</th>
+                                        <th>Median (A / B)</th>
+                                        <th>Min / Max (A / B)</th>
+                                        <th>Zero Counts (A / B)</th>
+                                        <th>Negative Counts (A / B)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="financialTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 2: Column Profiling -->
+                    <div class="subtab-content" id="subtab-columns">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Column Name</th>
+                                        <th>Status</th>
+                                        <th>Type (A)</th>
+                                        <th>Type (B)</th>
+                                        <th>Null % (A)</th>
+                                        <th>Null % (B)</th>
+                                        <th>Unique Values (A / B)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="columnProfileTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subtab 3: Row Discrepancies -->
+                    <div class="subtab-content" id="subtab-rows">
+                        <div id="rowDiscrepancySummary" style="margin-bottom: 1rem; color: #7affbf;"></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Key Identifier</th>
+                                        <th>Column Name</th>
+                                        <th>Baseline Value (A)</th>
+                                        <th>Comparison Value (B)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rowDiffTableBody">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </section>
+
+            </div>
+
+            <!-- ========================================================
+             TAB 6: SQL QUERY WORKBENCH
+             ======================================================== -->
+            <div class="tab-pane" id="tab-sql">
+                <div class="page-header" style="margin-bottom: 1.25rem;">
+                    <h1><i class="fa-solid fa-terminal" style="color: #34e89a; margin-right: 0.6rem;"></i>SQL Query
+                        Workbench</h1>
+                    <p>Run high-performance analytical SQL queries directly on your datasets using the DuckDB analytical
+                        engine.</p>
+                </div>
+
+                <div class="workbench-layout">
+                    <!-- Left: Dataset & Table Schema Browser -->
+                    <aside class="table-browser">
+                        <h3><i class="fa-solid fa-database"></i> Datasets & Tables</h3>
+                        <div style="margin-bottom: 0.8rem;">
+                            <select id="workbenchDatasetSelect"
+                                style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff; font-size: 0.85rem;">
+                                <option value="">-- Select Active Dataset --</option>
+                            </select>
+                        </div>
+                        <div id="tableSchemaTree" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <p style="font-size: 0.82rem; color: #94a3b8;">Select a dataset above to inspect its schema
+                                and columns.</p>
+                        </div>
+                    </aside>
+
+                    <!-- Right: SQL Editor & Output Area -->
+                    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div class="sql-editor-card">
+                            <!-- AI NL-to-SQL Assistant Bar -->
+                            <div class="ai-nl-bar">
+                                <i class="fa-solid fa-wand-magic-sparkles"
+                                    style="color: #34e89a; font-size: 1.1rem;"></i>
+                                <input type="text" id="aiQueryPromptInput"
+                                    placeholder="Ask Gemini: e.g., 'Show top 5 transaction categories by average amount' or 'Find attendance below 75%'">
+                                <button type="button" class="btn-ai-generate" id="generateSqlBtn">
+                                    <i class="fa-solid fa-sparkles"></i> Propose SQL
+                                </button>
+                            </div>
+
+                            <!-- Quick Template Chips -->
+                            <div class="template-chips">
+                                <span style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Templates:</span>
+                                <button type="button" class="template-chip" data-template="select_all">SELECT *</button>
+                                <button type="button" class="template-chip" data-template="group_count">COUNT & GROUP
+                                    BY</button>
+                                <button type="button" class="template-chip" data-template="aggregate_avg">AVG &
+                                    SUM</button>
+                                <button type="button" class="template-chip" data-template="filter_where">WHERE
+                                    Filter</button>
+                                <button type="button" class="template-chip" data-template="join_example">Table
+                                    JOIN</button>
+                                <button type="button" class="template-chip" data-template="order_desc">ORDER BY
+                                    DESC</button>
+                            </div>
+
+                            <!-- SQL Code Editor -->
+                            <textarea class="sql-textarea" id="sqlQueryTextarea"
+                                placeholder="-- Type your SQL query here (e.g. SELECT * FROM dataset LIMIT 20)&#10;SELECT * FROM dataset LIMIT 20;"></textarea>
+
+                            <!-- Action Controls & Status Bar -->
+                            <div class="sql-actions-bar">
+                                <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+                                    <button type="button" class="btn-primary" id="executeSqlBtn"
+                                        style="padding: 0.55rem 1.2rem; font-weight: 600;">
+                                        <i class="fa-solid fa-play"></i> Run Query
+                                    </button>
+                                    <button type="button" class="btn-action" id="clearSqlBtn">
+                                        <i class="fa-solid fa-rotate-left"></i> Clear
+                                    </button>
+                                    <button type="button" class="btn-action" id="saveSqlBtn">
+                                        <i class="fa-solid fa-bookmark"></i> Save Query
+                                    </button>
+                                    <button type="button" class="btn-action" id="exportSqlCsvBtn"
+                                        style="display: none;">
+                                        <i class="fa-solid fa-file-csv"></i> Export CSV
+                                    </button>
+                                </div>
+
+                                <div class="query-status-bar" id="sqlStatusBar" style="display: none;">
+                                    <span class="status-pill success" id="sqlStatusPill">Ready</span>
+                                    <span style="color: #94a3b8; font-size: 0.8rem;" id="sqlTimingBadge"><i
+                                            class="fa-solid fa-bolt"></i> 0 ms</span>
+                                    <span style="color: #94a3b8; font-size: 0.8rem;" id="sqlRowsBadge"><i
+                                            class="fa-solid fa-table-cells"></i> 0 rows</span>
+                                </div>
+                            </div>
+
+                            <div class="alert-msg" id="sqlErrorMsg" style="display: none;"></div>
+                        </div>
+
+                        <!-- Query Results Section -->
+                        <div class="results-container" id="sqlResultsCard" style="display: none;">
+                            <div class="results-toolbar">
+                                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                    <strong style="font-size: 0.95rem; color: #ffffff;"><i
+                                            class="fa-solid fa-table"></i> Query Results</strong>
+                                    <span id="sqlResultsCountBadge"
+                                        style="font-size: 0.8rem; color: #7affbf; background: rgba(52,232,154,0.15); padding: 0.2rem 0.5rem; border-radius: 6px;">0
+                                        rows</span>
+                                </div>
+
+                                <div class="results-view-tabs">
+                                    <button type="button" class="view-btn active" id="viewModeTableBtn"><i
+                                            class="fa-solid fa-table"></i> Table</button>
+                                    <button type="button" class="view-btn" id="viewModeChartBtn"><i
+                                            class="fa-solid fa-chart-column"></i> Chart</button>
+                                </div>
+                            </div>
+
+                            <!-- Table View -->
+                            <div id="sqlTableView">
+                                <div class="results-table-wrap">
+                                    <table id="sqlResultsTable">
+                                        <thead id="sqlResultsHead"></thead>
+                                        <tbody id="sqlResultsBody"></tbody>
+                                    </table>
+                                </div>
+                                <!-- Pagination -->
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(52,232,154,0.15);">
+                                    <span style="font-size: 0.82rem; color: #94a3b8;" id="sqlPaginationInfo">Page 1 of
+                                        1</span>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button type="button" class="btn-action" id="sqlPrevPageBtn" disabled><i
+                                                class="fa-solid fa-chevron-left"></i> Prev</button>
+                                        <button type="button" class="btn-action" id="sqlNextPageBtn" disabled>Next <i
+                                                class="fa-solid fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chart View -->
+                            <div id="sqlChartView" style="display: none;">
+                                <div class="chart-visualizer-stage">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+                                        <div style="display: flex; gap: 0.8rem; align-items: center;">
+                                            <label style="font-size: 0.82rem; color: #94a3b8;">X-Axis Category:</label>
+                                            <select id="chartXAxisSelect"
+                                                style="padding: 0.35rem 0.6rem; background: #032012; border: 1px solid rgba(52,232,154,0.3); border-radius: 6px; color: #fff; font-size: 0.82rem;"></select>
+                                            <label style="font-size: 0.82rem; color: #94a3b8;">Y-Axis Metric:</label>
+                                            <select id="chartYAxisSelect"
+                                                style="padding: 0.35rem 0.6rem; background: #032012; border: 1px solid rgba(52,232,154,0.3); border-radius: 6px; color: #fff; font-size: 0.82rem;"></select>
+                                        </div>
+                                        <button type="button" class="btn-action" id="renderCustomChartBtn"><i
+                                                class="fa-solid fa-rotate"></i> Redraw</button>
+                                    </div>
+                                    <div class="bar-chart-grid" id="sqlBarChartGrid">
+                                        <!-- Dynamic bars rendered via JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Evidence Summary Box -->
+                            <div id="sqlAiExplanationBox"
+                                style="padding: 1rem 1.25rem; background: rgba(5,25,16,0.9); border-top: 1px solid rgba(52,232,154,0.2); font-size: 0.88rem; color: #e2e8f0; display: flex; align-items: flex-start; gap: 0.8rem;">
+                                <i class="fa-solid fa-lightbulb" style="color: #34e89a; margin-top: 0.2rem;"></i>
+                                <div id="sqlAiExplanationText">Execution verified. Review rows above or export to CSV.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================
+             TAB 7: VISUAL DATA EXPLORER
+             ======================================================== -->
+            <div class="tab-pane" id="tab-explorer">
+                <div class="page-header" style="margin-bottom: 1.25rem;">
+                    <h1><i class="fa-solid fa-wand-magic-sparkles"
+                            style="color: #34e89a; margin-right: 0.6rem;"></i>Visual Data Explorer</h1>
+                    <p>Filter, group, aggregate, and inspect datasets visually without writing SQL manually.</p>
+                </div>
+
+                <div class="explorer-form-card">
+                    <!-- 1. Dataset Selection -->
+                    <div>
+                        <label
+                            style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #34e89a;">
+                            1. Select Dataset
+                        </label>
+                        <select id="visualDatasetSelect"
+                            style="width: 100%; max-width: 480px; padding: 0.65rem 0.9rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.4); border-radius: 10px; color: #ffffff; font-size: 0.92rem;">
+                            <option value="">-- Choose Dataset --</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. Column Selection -->
+                    <div>
+                        <label
+                            style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #34e89a;">
+                            2. Select Columns
+                        </label>
+                        <div id="visualColumnsList"
+                            style="display: flex; flex-wrap: wrap; gap: 0.5rem; max-height: 140px; overflow-y: auto; padding: 0.5rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                            <span style="font-size: 0.82rem; color: #94a3b8;">Select a dataset first.</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Filters -->
+                    <div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                            <label style="font-weight: 600; font-size: 0.9rem; color: #34e89a;">3. Filter Rows
+                                (WHERE)</label>
+                            <button type="button" class="btn-action" id="addFilterRowBtn"
+                                style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">
+                                <i class="fa-solid fa-plus"></i> Add Filter
+                            </button>
+                        </div>
+                        <div id="filtersContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- Dynamic filter rows -->
+                        </div>
+                    </div>
+
+                    <!-- 4. Grouping & Aggregations -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+                        <div>
+                            <label
+                                style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #34e89a;">
+                                4. Group By Column
+                            </label>
+                            <select id="visualGroupBySelect"
+                                style="width: 100%; padding: 0.6rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff;">
+                                <option value="">-- No Grouping --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #34e89a;">
+                                5. Aggregate Function
+                            </label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <select id="visualAggFuncSelect"
+                                    style="flex: 1; padding: 0.6rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff;">
+                                    <option value="">-- None --</option>
+                                    <option value="COUNT">COUNT(*)</option>
+                                    <option value="AVG">AVG</option>
+                                    <option value="SUM">SUM</option>
+                                    <option value="MIN">MIN</option>
+                                    <option value="MAX">MAX</option>
+                                </select>
+                                <select id="visualAggColSelect"
+                                    style="flex: 1.5; padding: 0.6rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff;">
+                                    <option value="">-- Target Column --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #34e89a;">
+                                6. Order & Limit
+                            </label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <select id="visualOrderDirSelect"
+                                    style="flex: 1; padding: 0.6rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff;">
+                                    <option value="DESC">DESC</option>
+                                    <option value="ASC">ASC</option>
+                                </select>
+                                <select id="visualLimitSelect"
+                                    style="flex: 1; padding: 0.6rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(52,232,154,0.3); border-radius: 8px; color: #fff;">
+                                    <option value="25">Limit 25</option>
+                                    <option value="50" selected>Limit 50</option>
+                                    <option value="100">Limit 100</option>
+                                    <option value="500">Limit 500</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generated SQL Live Preview -->
+                    <div
+                        style="background: rgba(0,0,0,0.4); border: 1px dashed rgba(52,232,154,0.3); border-radius: 10px; padding: 0.8rem 1rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                            <span style="font-size: 0.78rem; color: #7affbf; font-weight: 600;"><i
+                                    class="fa-solid fa-code"></i> Generated SQL Equivalent:</span>
+                            <button type="button" class="btn-action" id="openVisualSqlInWorkbenchBtn"
+                                style="font-size: 0.75rem; padding: 0.2rem 0.5rem;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in Workbench
+                            </button>
+                        </div>
+                        <code id="visualGeneratedSqlCode"
+                            style="font-size: 0.85rem; color: #e2e8f0; font-family: monospace; display: block; word-break: break-all;">
+                        SELECT * FROM dataset LIMIT 50;
+                    </code>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn-primary" id="runVisualQueryBtn"
+                            style="padding: 0.65rem 1.6rem; font-weight: 600;">
+                            <i class="fa-solid fa-play"></i> Execute Visual Query
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Table & Visualizer -->
+                <div class="results-container" id="visualResultsContainer" style="display: none; margin-top: 1.5rem;">
+                    <div class="results-toolbar">
+                        <strong style="color: #fff;"><i class="fa-solid fa-chart-simple"></i> Visual Exploration
+                            Results</strong>
+                        <span id="visualResultsCountBadge" style="font-size: 0.8rem; color: #34e89a;"></span>
+                    </div>
+                    <div class="results-table-wrap">
+                        <table id="visualResultsTable">
+                            <thead id="visualResultsHead"></thead>
+                            <tbody id="visualResultsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================
+             TAB 8: EXTERNAL DATASET DISCOVERY
+             ======================================================== -->
+            <div class="tab-pane" id="tab-discovery">
+                <div class="page-header" style="margin-bottom: 1.5rem;">
+                    <h1><i class="fa-solid fa-globe" style="color: #34e89a; margin-right: 0.6rem;"></i>External Dataset
+                        Discovery</h1>
+                    <p>Search, preview, and ingest authentic open data from the World Bank and official domain
+                        catalogues.</p>
+                </div>
+
+                <!-- Search & Filters -->
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                    <div style="flex: 1; min-width: 260px; position: relative;">
+                        <input type="text" id="discoverySearchInput"
+                            placeholder="Search external datasets (e.g., GDP, health, education, internet)..."
+                            style="width: 100%; padding: 0.7rem 1rem 0.7rem 2.5rem; background: rgba(5,25,16,0.8); border: 1px solid rgba(52,232,154,0.3); border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none;">
+                        <i class="fa-solid fa-magnifying-glass"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgba(52,232,154,0.6);"></i>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button type="button" class="view-btn active" data-discovery-domain="all">All Domains</button>
+                        <button type="button" class="view-btn" data-discovery-domain="finance"><i
+                                class="fa-solid fa-building-columns"></i> Finance</button>
+                        <button type="button" class="view-btn" data-discovery-domain="healthcare"><i
+                                class="fa-solid fa-hospital-user"></i> Healthcare</button>
+                        <button type="button" class="view-btn" data-discovery-domain="academics"><i
+                                class="fa-solid fa-graduation-cap"></i> Education</button>
+                        <button type="button" class="view-btn" data-discovery-domain="software_systems"><i
+                                class="fa-solid fa-microchip"></i> IT & Tech</button>
+                    </div>
+                </div>
+
+                <!-- Catalogue Grid -->
+                <div class="discovery-grid" id="discoveryCatalogueGrid">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- ========================================================
+             TAB 9: REPRODUCIBLE ANALYSIS & QUERY LINEAGE
+             ======================================================== -->
+            <div class="tab-pane" id="tab-lineage">
+                <div class="page-header" style="margin-bottom: 1.5rem;">
+                    <h1><i class="fa-solid fa-clock-rotate-left"
+                            style="color: #34e89a; margin-right: 0.6rem;"></i>Reproducible Analysis & Query Lineage</h1>
+                    <p>Track provenance, saved analytical workflows, execution history, and rerun analyses across
+                        successive dataset versions.</p>
+                </div>
+
+                <!-- Saved Queries -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #34e89a; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-bookmark"></i> Saved Analytical Queries
+                    </h3>
+                    <div id="savedQueriesList" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <p style="font-size: 0.85rem; color: #94a3b8;">No saved queries yet. Save a query in the SQL
+                            Workbench to rerun or track lineage.</p>
+                    </div>
+                </div>
+
+                <!-- Execution Lineage Log -->
+                <div>
+                    <h3 style="color: #34e89a; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-timeline"></i> Execution History & Reproduction Lineage
+                    </h3>
+                    <div id="lineageHistoryList" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <p style="font-size: 0.85rem; color: #94a3b8;">Execution logs will appear here when you run or
+                            rerun queries.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Dashboard JavaScript -->
+    <script src="api-config.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
