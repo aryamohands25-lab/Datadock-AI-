@@ -62,12 +62,13 @@ def is_supported_dataset(filename: str) -> bool:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # For local development
+    allow_origins=[
+        "https://datadock-ai-1.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # =========================================================
 # DATABASE
