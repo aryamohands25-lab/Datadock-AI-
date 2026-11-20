@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from domains import get_rules_for_domain, FINANCIAL_RULES, HEALTHCARE_RULES
 
 DEFAULT_FINANCIAL_RULES = FINANCIAL_RULES
